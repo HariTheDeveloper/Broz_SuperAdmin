@@ -1,0 +1,331 @@
+{
+  "project_info": {
+    "project_number": "878479475232",
+    "firebase_url": "https://broz-244206.firebaseio.com",
+    "project_id": "broz-244206",
+    "storage_bucket": "broz-244206.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:aad97ba39aaee7dfdd7245",
+        "android_client_info": {
+          "package_name": "app.broz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:d50a5269c665cfcfdd7245",
+        "android_client_info": {
+          "package_name": "app.broz.superadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:fb8da6cd01126569dd7245",
+        "android_client_info": {
+          "package_name": "app.brozadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:5d189bcc43418efedd7245",
+        "android_client_info": {
+          "package_name": "broz.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-v99ko22dtoilje4mqe3eal1gl0ad2vel.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "broz.driver",
+            "certificate_hash": "5ec7a4b839f95a250c204ac00837a1eb3eec7adf"
+          }
+        },
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:4e0efdef19238706dd7245",
+        "android_client_info": {
+          "package_name": "broz.outletmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-cnrcoshbg97q8t80vncvmas3feml7b61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "broz.outletmanager",
+            "certificate_hash": "5ec7a4b839f95a250c204ac00837a1eb3eec7adf"
+          }
+        },
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:fb6d94d73d47c34ddd7245",
+        "android_client_info": {
+          "package_name": "broz.salesfleet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-c85rjtet42tik4qgrn36iuvj6kdsggic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "broz.salesfleet",
+            "certificate_hash": "5ec7a4b839f95a250c204ac00837a1eb3eec7adf"
+          }
+        },
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:fc9bf9732ec2e009dd7245",
+        "android_client_info": {
+          "package_name": "com.broz.brozpilot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-fc3ss6jqss44ge7uqljr4spqiloubfi6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.broz.brozpilot",
+            "certificate_hash": "eccfdfcf1f5fbde095f0117968a21d98cb497159"
+          }
+        },
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878479475232:android:a8f173fdd1a3b44c",
+        "android_client_info": {
+          "package_name": "pasu.broz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi22RKkiroUhVManFsuyr1A9aL8IoqvRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878479475232-9sfsreidc294pvmqrknk3ahpi0ooj2ai.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878479475232-ma3ou2fnqtdta1flcgq8p1kohrk2s5lr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.brozadmin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
