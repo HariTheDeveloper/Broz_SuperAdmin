@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:push_notification/List/listcell.dart';
 
 var _defaultApiHeaders = {
   HttpHeaders.contentTypeHeader: 'application/json',
@@ -9,67 +10,74 @@ var _defaultApiHeaders = {
   'api-token': 'dGhpc2lzYWNvbW1vbnRva2VuXzE='
 };
 
-class OrdersJson {
-  final String outletName;
-  final String vendorLogo;
-  final String orderKeyFormated;
-  final String paymentMode;
-  final String placedOn;
-  final String total;
-  OrdersJson(
-      {this.outletName,
-      this.vendorLogo,
-      this.orderKeyFormated,
-      this.paymentMode,
-      this.placedOn,
-      this.total});
+// class OrdersJson {
+//   final String outletName;
+//   final String vendorLogo;
+//   final String orderKeyFormated;
+//   final String paymentMode;
+//   final String placedOn;
+//   final String total;
+//   final String statusName;
+//   OrdersJson(
+//       {this.outletName,
+//       this.vendorLogo,
+//       this.orderKeyFormated,
+//       this.paymentMode,
+//       this.placedOn,
+//       this.total,
+//       this.statusName});
 
-  factory OrdersJson.fromJson(Map<String, dynamic> jsonData) {
-    return OrdersJson(
-        outletName: jsonData['outletName'],
-        vendorLogo: jsonData['vendorLogo'],
-        orderKeyFormated: jsonData['orderKeyFormated'],
-        paymentMode: jsonData['paymentMode'],
-        placedOn: jsonData['placedOn'],
-        total: jsonData['total']);
-  }
-}
+//   factory OrdersJson.fromJson(Map<String, dynamic> jsonData) {
+//     return OrdersJson(
+//         outletName: jsonData['outletName'],
+//         vendorLogo: jsonData['vendorLogo'],
+//         orderKeyFormated: jsonData['orderKeyFormated'],
+//         paymentMode: jsonData['paymentMode'],
+//         placedOn: jsonData['placedOn'],
+//         total: jsonData['total'],
+//         statusName: jsonData['statusName']);
+//   }
+// }
 
-Future<List<OrdersJson>> _getOrdersList(int pageNumber) async {
+Future<List<OrderJson>> _getOrdersList(int pageNumber) async {
+  var params =
+      jsonEncode(<String, dynamic>{'pageNumber': pageNumber, 'pageSize': 10});
+  print("Params : $params");
   final data = await http.post("https://brozapp.com/api/morderDetails",
       headers: _defaultApiHeaders,
       body: jsonEncode(
           <String, dynamic>{'pageNumber': pageNumber, 'pageSize': 10}));
+
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {
     final Iterable orderDataList = json['orderDataList'];
     if (orderDataList.length > 0) {
-      return orderDataList.map((e) => OrdersJson.fromJson(e)).toList();
+      return orderDataList.map((e) => OrderJson.fromJson(e)).toList();
     } else {
-      return List<OrdersJson>();
+      return List<OrderJson>();
     }
   }
-  return List<OrdersJson>();
+  return List<OrderJson>();
 }
 
 class StreamModel {
-  Stream<List<OrdersJson>> stream;
+  Stream<List<OrderJson>> stream;
   bool hasMore;
   int pageNumber;
   int pagelimit;
   bool isLoading;
   bool reachedBottom;
-  List<OrdersJson> _data;
-  StreamController<List<OrdersJson>> _controller;
+  List<OrderJson> _data;
+  StreamController<List<OrderJson>> _controller;
 
   StreamModel() {
-    _data = List<OrdersJson>();
-    _controller = StreamController<List<OrdersJson>>.broadcast();
+    _data = List<OrderJson>();
+    _controller = StreamController<List<OrderJson>>.broadcast();
     isLoading = false;
     pageNumber = 1;
     pagelimit = 15;
-    stream = _controller.stream.map((List<OrdersJson> postsData) {
+    stream = _controller.stream.map((List<OrderJson> postsData) {
       return postsData;
     });
     hasMore = true;
@@ -84,7 +92,7 @@ class StreamModel {
   Future<void> loadMore(
       {bool clearCachedData = false, bool reachesBottom = false}) {
     if (clearCachedData) {
-      _data = List<OrdersJson>();
+      _data = List<OrderJson>();
       pageNumber = 1;
       hasMore = true;
     }

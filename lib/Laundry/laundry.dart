@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:push_notification/Laundry/laundryList.dart';
 import 'package:push_notification/Laundry/laundryModel.dart';
+import 'package:push_notification/List/listcell.dart';
 
 class LaundryScreen extends StatefulWidget {
   @override
@@ -51,7 +51,7 @@ class _LaundryScreenState extends State<LaundryScreen> {
                 itemCount: _snapshot.data.length + 1,
                 itemBuilder: (BuildContext _context, int index) {
                   if (index < _snapshot.data.length) {
-                    return LaundryList(ordersJson: _snapshot.data[index]);
+                    return ListCell(ordersJson: _snapshot.data[index]);
                   } else if (streamModel.hasMore) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 32.0),
@@ -61,9 +61,14 @@ class _LaundryScreenState extends State<LaundryScreen> {
                                   Colors.green[300]))),
                     );
                   } else {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32.0),
-                      child: Text('Nothing more to load !'),
+                    return Align(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 32.0),
+                        child: Align(
+                          child: Text('Nothing more to load !'),
+                          alignment: Alignment.center,
+                        ),
+                      ),
                     );
                   }
                 },

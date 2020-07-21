@@ -3,41 +3,17 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:push_notification/List/listcell.dart';
+
 var _defaultApiHeaders = {
   HttpHeaders.contentTypeHeader: 'application/json',
   HttpHeaders.authorizationHeader: '',
   'api-token': 'dGhpc2lzYWNvbW1vbnRva2VuXzE='
 };
 
-class MaidOrderJson {
-  final String outletName;
-  final String vendorLogo;
-  final int orderKeyFormated;
-  final String paymentMode;
-  final String placedOn;
-  final String total;
-  MaidOrderJson(
-      {this.outletName,
-      this.vendorLogo,
-      this.orderKeyFormated,
-      this.paymentMode,
-      this.placedOn,
-      this.total});
-
-  factory MaidOrderJson.fromJson(Map<String, dynamic> jsonData) {
-    return MaidOrderJson(
-        outletName: jsonData['outletName'],
-        vendorLogo: jsonData['vendorLogo'],
-        orderKeyFormated: jsonData['appointmentId'],
-        paymentMode: jsonData['paymentMode'],
-        placedOn: jsonData['appointmentDate'],
-        total: jsonData['totalCost']);
-  }
-}
-
-Future<List<MaidOrderJson>> _getMaidOrdersList(int withPage) async {
+Future<List<OrderJson>> _getMaidOrdersList(int withPage) async {
   final data = await http.post(
-      "http://barber.pasubot.com/api/past/appointment/list",
+      "http://maid.brozapp.com/api/past/appointment/list",
       headers: _defaultApiHeaders,
       body: jsonEncode(
           <String, dynamic>{"pageNumber": withPage, "pageSize": 10}));
@@ -46,29 +22,29 @@ Future<List<MaidOrderJson>> _getMaidOrdersList(int withPage) async {
   if (json["httpCode"] == 200) {
     final Iterable orderDataList = json["responseData"]['appointments'];
     if (orderDataList.length > 0) {
-      return orderDataList.map((e) => MaidOrderJson.fromJson(e)).toList();
+      return orderDataList.map((e) => OrderJson.fromJson(e)).toList();
     } else {
-      return List<MaidOrderJson>();
+      return List<OrderJson>();
     }
   }
-  return List<MaidOrderJson>();
+  return List<OrderJson>();
 }
 
 class MaidStreamModel {
-  Stream<List<MaidOrderJson>> stream;
+  Stream<List<OrderJson>> stream;
   bool hasMore;
   int pageNumber;
   bool _isLoading;
   bool reachedBottom;
-  List<MaidOrderJson> _data;
-  StreamController<List<MaidOrderJson>> _controller;
+  List<OrderJson> _data;
+  StreamController<List<OrderJson>> _controller;
 
   MaidStreamModel() {
-    _data = List<MaidOrderJson>();
-    _controller = StreamController<List<MaidOrderJson>>.broadcast();
+    _data = List<OrderJson>();
+    _controller = StreamController<List<OrderJson>>.broadcast();
     _isLoading = false;
     pageNumber = 1;
-    stream = _controller.stream.map((List<MaidOrderJson> postsData) {
+    stream = _controller.stream.map((List<OrderJson> postsData) {
       return postsData;
     });
     hasMore = true;
@@ -82,7 +58,7 @@ class MaidStreamModel {
   Future<void> loadMore(
       {bool clearCachedData = false, bool reachesBottom = false}) {
     if (clearCachedData) {
-      _data = List<MaidOrderJson>();
+      _data = List<OrderJson>();
       pageNumber = 1;
       hasMore = true;
     }

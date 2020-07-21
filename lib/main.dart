@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -62,26 +62,32 @@ class MyHomePageState extends State<MyHomePage>
     }
 
     fcm.configure(
-        onBackgroundMessage: fcmBackgroundMessageHandler,
+        onBackgroundMessage:
+            Platform.isAndroid ? fcmBackgroundMessageHandler : null,
 
         //called when app is in foreground and we receive notifications
         onMessage: (Map<String, dynamic> message) async {
           print("on Message :$message");
-          showNotification(message);
+          if (Platform.isAndroid) {
+            showNotification(message["notification"]["title"],
+                message["notification"]["body"]);
+          } else {
+            showNotification(message["aps"]["alert"]["title"],
+                message["aps"]["alert"]["body"]);
+          }
         },
         //called when app is closed completely and opened when we receive notifications
         onLaunch: (Map<String, dynamic> message) async {
           print("on Launch :$message");
-          showNotification(message);
         },
         //called when app is in background and we receive notifications
         onResume: (Map<String, dynamic> message) async {
           print("on Resume :$message");
-          showNotification(message);
         });
   }
 
-  showNotification(Map<String, dynamic> msg) async {
+  showNotification(String title, String message) async {
+    print("Message :$title");
     var android = AndroidNotificationDetails(
       'Broz_Admin_01',
       "Broz_Admin",
@@ -92,8 +98,7 @@ class MyHomePageState extends State<MyHomePage>
     );
     var iOS = IOSNotificationDetails();
     var platform = NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(
-        0, msg["notification"]["title"], msg["notification"]["body"], platform);
+    await flutterLocalNotificationsPlugin.show(0, title, message, platform);
   }
 
   static Future<dynamic> fcmBackgroundMessageHandler(

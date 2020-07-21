@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:push_notification/Grocery/groceryList.dart';
+import 'package:push_notification/List/listcell.dart';
 import 'package:push_notification/Grocery/groceryModel.dart';
 
 class GroceryScreen extends StatefulWidget {
@@ -55,7 +55,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
                 itemCount: _snapshot.data.length + 1,
                 itemBuilder: (BuildContext _context, int index) {
                   if (index < _snapshot.data.length) {
-                    return GroceryList(ordersJson: _snapshot.data[index]);
+                    return ListCell(ordersJson: _snapshot.data[index]);
                   } else if (streamModel.hasMore) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 32.0),
@@ -67,7 +67,10 @@ class _GroceryScreenState extends State<GroceryScreen> {
                   } else {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 32.0),
-                      child: Text('Nothing more to load !'),
+                      child: Align(
+                        child: Text('Nothing more to load !'),
+                        alignment: Alignment.center,
+                      ),
                     );
                   }
                 },

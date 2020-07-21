@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:push_notification/Barber/barberList.dart';
+import 'package:push_notification/List/listcell.dart';
 import 'package:push_notification/Barber/barberModel.dart';
 
 class BarberScreen extends StatefulWidget {
@@ -26,7 +26,6 @@ class _BarberScreenState extends State<BarberScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     scrollController.dispose();
     super.dispose();
   }
@@ -52,7 +51,7 @@ class _BarberScreenState extends State<BarberScreen> {
                 itemCount: _snapshot.data.length + 1,
                 itemBuilder: (BuildContext _context, int index) {
                   if (index < _snapshot.data.length) {
-                    return BarberList(ordersJson: _snapshot.data[index]);
+                    return ListCell(ordersJson: _snapshot.data[index]);
                   } else if (streamModel.hasMore) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 32.0),
@@ -64,7 +63,10 @@ class _BarberScreenState extends State<BarberScreen> {
                   } else {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 32.0),
-                      child: Text('Nothing more to load !'),
+                      child: Align(
+                        child: Text('Nothing more to load !'),
+                        alignment: Alignment.center,
+                      ),
                     );
                   }
                 },

@@ -3,41 +3,18 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:push_notification/List/listcell.dart';
+
 var _defaultApiHeaders = {
   HttpHeaders.contentTypeHeader: 'application/json',
   HttpHeaders.authorizationHeader: '',
   'api-token': 'dGhpc2lzYWNvbW1vbnRva2VuXzE='
 };
 
-class BarberOrderJson {
-  final String outletName;
-  final String vendorLogo;
-  final int orderKeyFormated;
-  final int paymentMode;
-  final String placedOn;
-  final String total;
-  BarberOrderJson(
-      {this.outletName,
-      this.vendorLogo,
-      this.orderKeyFormated,
-      this.paymentMode,
-      this.placedOn,
-      this.total});
-
-  factory BarberOrderJson.fromJson(Map<String, dynamic> jsonData) {
-    return BarberOrderJson(
-        outletName: jsonData['outletName'],
-        vendorLogo: jsonData['vendorLogo'],
-        orderKeyFormated: jsonData['appointmentId'],
-        paymentMode: jsonData['paymentMode'],
-        placedOn: jsonData['appointmentDate'],
-        total: jsonData['totalCost']);
-  }
-}
-
-Future<List<BarberOrderJson>> _getBarberOrdersList(int withPage) async {
+Future<List<OrderJson>> _getBarberOrdersList(int withPage) async {
+  //barber.pasutech
   final data = await http.post(
-      "http://barber.pasutech.in/api/past/appointment/list",
+      "http://barber.brozapp.com/api/past/appointment/list",
       headers: _defaultApiHeaders,
       body: jsonEncode(
           <String, dynamic>{"pageNumber": withPage, "pageSize": 10}));
@@ -46,30 +23,31 @@ Future<List<BarberOrderJson>> _getBarberOrdersList(int withPage) async {
   if (json["httpCode"] == 200) {
     final Iterable orderDataList = json['responseData']["appointments"];
     if (orderDataList.length > 0) {
-      return orderDataList.map((e) => BarberOrderJson.fromJson(e)).toList();
+      return orderDataList.map((e) => OrderJson.fromJson(e)).toList();
     } else {
-      return List<BarberOrderJson>();
+      return List<OrderJson>();
     }
   } else {
-    return List<BarberOrderJson>();
+    return List<OrderJson>();
   }
 }
 
 class BarberStreamModel {
-  Stream<List<BarberOrderJson>> stream;
+  Stream<List<OrderJson>> stream;
   bool hasMore;
   int pageNumber;
   bool isLoading;
   bool reachedBottom;
-  List<BarberOrderJson> _data;
-  StreamController<List<BarberOrderJson>> _controller;
+  List<OrderJson> _data;
+
+  StreamController<List<OrderJson>> _controller;
 
   BarberStreamModel() {
-    _data = List<BarberOrderJson>();
-    _controller = StreamController<List<BarberOrderJson>>.broadcast();
+    _data = List<OrderJson>();
+    _controller = StreamController<List<OrderJson>>.broadcast();
     isLoading = false;
     pageNumber = 1;
-    stream = _controller.stream.map((List<BarberOrderJson> postsData) {
+    stream = _controller.stream.map((List<OrderJson> postsData) {
       return postsData;
     });
     hasMore = true;
@@ -83,7 +61,7 @@ class BarberStreamModel {
   Future<void> loadMore(
       {bool clearCachedData = false, bool reachesBottom = false}) {
     if (clearCachedData) {
-      _data = List<BarberOrderJson>();
+      _data = List<OrderJson>();
       pageNumber = 1;
       hasMore = true;
     }

@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:push_notification/main.dart';
 import 'package:share/share.dart';
@@ -10,18 +8,18 @@ class ShareTokenPage extends StatefulWidget {
 }
 
 class _ShareTokenPageState extends State<ShareTokenPage> {
-  final FirebaseMessaging _fcm = FirebaseMessaging();
   String deviceToken;
   @override
   void initState() {
-    initialize();
     super.initState();
+    initialize();
   }
 
   void initialize() {
     MyHomePageState.fcm.getToken().then((value) {
-      deviceToken = value;
-      print("Token: $deviceToken");
+      setState(() {
+        deviceToken = value;
+      });
     });
   }
 
@@ -47,44 +45,66 @@ class _ShareTokenPageState extends State<ShareTokenPage> {
         ),
         backgroundColor: Colors.green,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const SizedBox(
-            height: 5.0,
-          ),
-          Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.all(15),
+      body: SizedBox.expand(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              height: 5.0,
+            ),
+            Align(
+                alignment: Alignment.center,
+                child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Token",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          "$deviceToken",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Text(
+                            "Please share your device token to admin to get in contact by clicking the share button below !",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ))),
+            const SizedBox(
+              height: 8.0,
+            ),
+            InkWell(
+              onTap: () {
+                final RenderBox box = context.findRenderObject();
+                Share.share(deviceToken,
+                    subject: "Push Notification",
+                    sharePositionOrigin:
+                        box.localToGlobal(Offset.zero) & box.size);
+              },
+              child: Container(
+                color: Colors.green,
+                padding: EdgeInsets.all(10),
                 child: Text(
-                  "Please share your device token to admin to get in contact by clicking the share button below !",
-                  style: TextStyle(color: Colors.grey),
+                  'Share',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                  textAlign: TextAlign.center,
                 ),
-              )),
-          InkWell(
-            onTap: () {
-              final RenderBox box = context.findRenderObject();
-              Share.share(deviceToken,
-                  subject: "Push Notification",
-                  sharePositionOrigin:
-                      box.localToGlobal(Offset.zero) & box.size);
-            },
-            child: Container(
-              color: Colors.green,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Share',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-                textAlign: TextAlign.center,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
