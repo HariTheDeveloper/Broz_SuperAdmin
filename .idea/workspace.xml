@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b2bfb07e-c6b5-4563-880f-b86cf0a1ccf2" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="ZY223K759Q" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1ei2sDBlM2POfB2HwQ0IBV65Kyl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b2bfb07e-c6b5-4563-880f-b86cf0a1ccf2" name="Default Changelist" comment="" />
+      <created>1594790296834</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594790296834</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="397" y="175" key="Vcs.Push.Dialog.v2" timestamp="1594906267859">
+      <screen x="51" y="23" width="1229" height="777" />
+    </state>
+    <state x="397" y="175" key="Vcs.Push.Dialog.v2/51.23.1229.777@51.23.1229.777" timestamp="1594906267859" />
+    <state x="334" y="241" key="com.intellij.ide.util.TipDialog" timestamp="1594815086074">
+      <screen x="47" y="23" width="1233" height="777" />
+    </state>
+    <state x="334" y="241" key="com.intellij.ide.util.TipDialog/47.23.1233.777@47.23.1233.777" timestamp="1594815086074" />
+  </component>
+</project>

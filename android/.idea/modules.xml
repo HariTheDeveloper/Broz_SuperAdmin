@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" group="android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1531022109/flutter_local_notifications.iml" filepath="$PROJECT_DIR$/.idea/modules/-1531022109/flutter_local_notifications.iml" group="android/flutter_local_notifications" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1479157865/io.flutter.plugins.firebasemessaging-firebase_messaging.iml" filepath="$PROJECT_DIR$/.idea/modules/-1479157865/io.flutter.plugins.firebasemessaging-firebase_messaging.iml" group="android/firebase_messaging" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/482417235/share.iml" filepath="$PROJECT_DIR$/.idea/modules/482417235/share.iml" group="android/share" />
+    </modules>
+  </component>
+</project>
