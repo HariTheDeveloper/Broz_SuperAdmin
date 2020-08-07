@@ -1,4 +1,0 @@
-#Fri Jul 17 18:44:23 IST 2020
-base.0=/Users/hariharan/Documents/Hari/Learnings/Flutter/push_notification/build/app/intermediates/transforms/r8/release/0/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
