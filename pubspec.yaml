@@ -34,6 +34,14 @@ dependencies:
   share: ^0.6.4+3
   flutter_local_notifications: ^1.4.4+2
   rxdart: ^0.24.1
+  flutter_country_picker: ^0.1.6
+  page_transition:  ^1.1.6
+  pin_entry_text_field: ^0.1.4
+  device_id: ^0.2.0
+  shared_preferences: ^0.5.8
+  flutter_svg: ^0.17.1
+  rflutter_alert: ^1.0.3
+  loading_overlay: ^0.2.1
 
 dev_dependencies:
   flutter_test:

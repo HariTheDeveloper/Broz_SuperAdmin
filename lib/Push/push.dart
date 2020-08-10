@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:push_notification/main.dart';
+import 'package:push_notification/Login/login/mobile_login.dart';
 import 'package:share/share.dart';
 
 class ShareTokenPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _ShareTokenPageState extends State<ShareTokenPage> {
   }
 
   void initialize() {
-    MyHomePageState.fcm.getToken().then((value) {
+    MobileLoginPageState.fcm.getToken().then((value) {
       setState(() {
         deviceToken = value;
       });
