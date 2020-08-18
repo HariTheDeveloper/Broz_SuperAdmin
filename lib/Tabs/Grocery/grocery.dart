@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:push_notification/List/listcell.dart';
 import 'package:push_notification/Tabs/Grocery/groceryModel.dart';
+import 'package:push_notification/Utitlity/Constants.dart';
 
 class GroceryScreen extends StatefulWidget {
   const GroceryScreen({
@@ -16,7 +17,9 @@ class _GroceryScreenState extends State<GroceryScreen> {
   StreamModel streamModel;
   @override
   void initState() {
-    streamModel = StreamModel();
+    
+      streamModel = StreamModel();
+    
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -37,54 +40,67 @@ class _GroceryScreenState extends State<GroceryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: streamModel.stream,
-        builder: (BuildContext _context, AsyncSnapshot _snapshot) {
-          if (!_snapshot.hasData) {
-            return Center(
-                child: CircularProgressIndicator(
-                    valueColor:
-                        new AlwaysStoppedAnimation<Color>(Colors.green[300])));
-          } else if (_snapshot.data.length > 0) {
-            return RefreshIndicator(
-              onRefresh: streamModel.refresh,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                controller: scrollController,
-                separatorBuilder: (context, index) => Divider(),
-                itemCount: _snapshot.data.length + 1,
-                itemBuilder: (BuildContext _context, int index) {
-                  if (index < _snapshot.data.length) {
-                    return ListCell(ordersJson: _snapshot.data[index]);
-                  } else if (streamModel.hasMore) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32.0),
-                      child: Center(
-                          child: CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Colors.green[300]))),
-                    );
-                  } else {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 32.0),
-                      child: Align(
-                        child: _snapshot.data.length > 4 ? Text('Nothing more to load !') : Container(),
-                        alignment: Alignment.center,
-                      ),
-                    );
-                  }
-                },
+      body: Constants.showData
+          ? StreamBuilder(
+              stream: streamModel.stream,
+              builder: (BuildContext _context, AsyncSnapshot _snapshot) {
+                if (!_snapshot.hasData) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Colors.green[300])));
+                } else if (_snapshot.data.length > 0) {
+                  return RefreshIndicator(
+                    color: Colors.black,
+                    onRefresh: streamModel.refresh,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      controller: scrollController,
+                      separatorBuilder: (context, index) => Divider(),
+                      itemCount: _snapshot.data.length + 1,
+                      itemBuilder: (BuildContext _context, int index) {
+                        if (index < _snapshot.data.length) {
+                          return ListCell(ordersJson: _snapshot.data[index]);
+                        } else if (streamModel.hasMore) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 32.0),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                                    valueColor:
+                                        new AlwaysStoppedAnimation<Color>(
+                                            Colors.green[300]))),
+                          );
+                        } else {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 32.0),
+                            child: Align(
+                              child: _snapshot.data.length > 4
+                                  ? Text('Nothing more to load !')
+                                  : Container(),
+                              alignment: Alignment.center,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  );
+                } else {
+                  return Center(
+                      child: Text(
+                    'No data found !',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ));
+                }
+              },
+            )
+          : Center(
+              child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'You are not authorized to view this.\nPlease contact admin !',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-            );
-          } else {
-            return Center(
-                child: Text(
-              'No data found !',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ));
-          }
-        },
-      ),
+            )),
     );
   }
 }

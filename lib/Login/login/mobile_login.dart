@@ -39,6 +39,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
     super.initState();
     showLoader = false;
     initialize();
+   
   }
 
   @override
@@ -155,10 +156,10 @@ class MobileLoginPageState extends State<MobileLoginPage> {
                   ),
                   mobileNumView(),
                   SizedBox(
-                    height: 50,
+                    height: 25,
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 40,
                     width: 200,
                     child: FlatButton(
                       onPressed: () {
@@ -201,6 +202,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
                       color: Colors.green,
                     ),
                   ),
+                  /*
                   SizedBox(height: 10),
                   Text('(OR)'),
                   SizedBox(height: 10),
@@ -218,7 +220,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
                       ),
                       color: Colors.blue,
                     ),
-                  ),
+                  )*/
                   Container(
                     height: 100,
                     color: Colors.white,
@@ -284,7 +286,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
     showLoaderDialog(context, _keyAlertDialog);
     loginDetails(
       Resource(
-        url: '${BaseUrl}mverifyPhone',
+        url: '${BaseUrl}adminVerifyPhone', //mverifyPhone
         request: loginRequestToJson(
           LoginRequest(
               countryCode:
@@ -308,7 +310,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
                 child: PasswordPage(logindetail: value.details),
                 type: PageTransitionType.rightToLeftWithFade));
         return const SizedBox.shrink();
-      } else if (value.status == 2) {
+      } /*else if (value.status == 2) {
         Navigator.push(
             context,
             PageTransition(
@@ -318,7 +320,8 @@ class MobileLoginPageState extends State<MobileLoginPage> {
                 ),
                 type: PageTransitionType.leftToRightWithFade));
         return const SizedBox.shrink();
-      } else {
+      } */
+      else {
         Alert(
           style: AlertStyle(
             isCloseButton: false,

@@ -75,6 +75,7 @@ class _PasswordPageState extends State<PasswordPage> {
                           )),
                     ),
                   ),
+                  /*
                   SizedBox(height: 20),
                   Center(
                     child: FlatButton(
@@ -123,7 +124,7 @@ class _PasswordPageState extends State<PasswordPage> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
                         )),
-                  ),
+                  ),*/
                   Center(
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -248,7 +249,7 @@ class _PasswordPageState extends State<PasswordPage> {
   void checkPasswordApi() {
     showLoaderDialog(context, _keyAlertDialog);
     passwordCheckDetails(Resource(
-      url: '${BaseUrl}mverifyPassword',
+      url: '${BaseUrl}adminVerifyPassword', //mverifyPassword
       request: checkPasswordRequestToJson(
         CheckPasswordRequest(
           userId: widget.logindetail.userId,
@@ -264,7 +265,9 @@ class _PasswordPageState extends State<PasswordPage> {
     )).then((value) {
       closeLoaderDialog(_keyAlertDialog);
       if (value.status == 1) {
-        moveToAllServices(value.details.userId);
+        print("Value: ${value.details.outletId}");
+        moveToAllServices(value.details.userId, value.details.userType,
+            value.details.outletId);
       } else {
         Alert(
           style: AlertStyle(
@@ -293,11 +296,17 @@ class _PasswordPageState extends State<PasswordPage> {
     });
   }
 
-  void moveToAllServices(int withUserID) async {
+  void moveToAllServices(
+      int withUserID, int userType, List<String> outletID) async {
+    print('Outlet id: $outletID');
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatus', true);
     prefs.setInt('userID', withUserID);
+    prefs.setInt('userType', userType);
+    prefs.setStringList('outletID', outletID);
     Constants.userID = withUserID;
+    Constants.userType = userType;
+    Constants.outletID = outletID;
     Navigator.push(
         context,
         PageTransition(

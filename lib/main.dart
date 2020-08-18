@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Admin Broz',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
@@ -36,10 +37,18 @@ class MyHomePageState extends State<MyHomePage>
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<bool> loggedIn;
   Future<int> useriD;
+  Future<int> userType;
+  Future<List<String>> outletID;
+  static FirebaseMessaging fcm = FirebaseMessaging();
   @override
   void initState() {
     super.initState();
     _loginSetup();
+    fcm.getToken().then((value) {
+      setState(() {
+        Constants.deviceToken = value;
+      });
+    });
   }
 
   _loginSetup() {
@@ -49,10 +58,24 @@ class MyHomePageState extends State<MyHomePage>
     useriD = _prefs.then((SharedPreferences prefs) {
       return prefs.getInt("userID") ?? 0;
     });
+
+    userType = _prefs.then((SharedPreferences prefs) {
+      return prefs.getInt("userType") ?? 0;
+    });
+
+    outletID = _prefs.then((SharedPreferences prefs) {
+      return prefs.getStringList("outletID") ?? 0;
+    });
+
     useriD.then((value) {
       Constants.userID = value;
     });
-
+    userType.then((value) {
+      Constants.userType = value;
+    });
+    outletID.then((value) {
+      Constants.outletID = value;
+    });
     loggedIn.then((value) {
       _moveScreens(value);
     });

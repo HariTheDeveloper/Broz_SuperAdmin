@@ -19,8 +19,11 @@ Future<List<OrderJson>> _getMaidOrdersList(int withPage) async {
       body: jsonEncode(<String, dynamic>{
         "pageNumber": withPage,
         "pageSize": 10,
-        "clientId": Constants.userID
+        "clientId": Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
       }));
+      print('request params ${data.body} ** ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {
@@ -52,7 +55,9 @@ class MaidStreamModel {
       return postsData;
     });
     hasMore = true;
-    refresh();
+    if (Constants.showData) {
+      refresh();
+    }
   }
 
   Future<void> refresh() {

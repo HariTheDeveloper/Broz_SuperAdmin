@@ -21,13 +21,13 @@ class CheckPasswordRequest {
       this.language});
 
   Map<String, dynamic> toJson() => {
-        "phoneNumber": phoneNumber,
+        "phone": phoneNumber,
         "countryCode": countryCode,
         "deviceId": deviceId,
         "deviceToken": deviceToken,
         "deviceType": deviceType,
         "userId": userId,
-        "userPassword": userPassword,
+        "password": userPassword,
         "language": language
       };
 }
@@ -43,8 +43,8 @@ class CheckPasswordResponse {
     return CheckPasswordResponse(
       status: json['status'],
       message: json['message'],
-      details: json['detail'] != null
-          ? PasswordDetails.fromJson(json['detail'])
+      details: json['responseData'] != null
+          ? PasswordDetails.fromJson(json['responseData'])
           : null,
     );
   }
@@ -61,7 +61,9 @@ class PasswordDetails {
   final String firstName;
   final String lastName;
   final String userOtp;
+  final int userType;
   List<UserAddress> userAddress;
+  List<String> outletId;
 
   PasswordDetails(
       {this.userId,
@@ -74,11 +76,15 @@ class PasswordDetails {
       this.firstName,
       this.lastName,
       this.userOtp,
+      this.userType,
+      this.outletId,
       this.userAddress});
 
   factory PasswordDetails.fromJson(Map<String, dynamic> json) {
     if (json != null) {
       final Iterable addressList = json['userAddress'];
+      final Iterable outletId = json['outletId'];
+      // print("Outlet ID: $outletId");
       return PasswordDetails(
           userId: json['userId'],
           countryCode: json['countryCode'],
@@ -90,8 +96,11 @@ class PasswordDetails {
           firstName: json['firstName'],
           lastName: json['lastName'],
           userOtp: json['userOtp'],
-          userAddress:
-              addressList.map((e) => UserAddress.fromJson(e)).toList());
+          userType: json['userType'],
+          outletId: outletId.map((el) => el.toString()).toList(),
+          userAddress: addressList != null
+              ? addressList.map((e) => UserAddress.fromJson(e)).toList()
+              : null);
     } else
       return null;
   }

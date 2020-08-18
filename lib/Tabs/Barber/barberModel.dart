@@ -14,14 +14,16 @@ var _defaultApiHeaders = {
 
 Future<List<OrderJson>> _getBarberOrdersList(int withPage) async {
   //barber.pasutech
-  final data = await http.post(
-      "http://barber.brozapp.com/api/past/appointment/list",
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": withPage,
-        "pageSize": 10,
-        "clientId": Constants.userID
-      }));
+  final data =
+      await http.post("http://barber.brozapp.com/api/past/appointment/list",
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            "pageNumber": withPage,
+            "pageSize": 10,
+            "clientId": Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {
@@ -55,7 +57,9 @@ class BarberStreamModel {
       return postsData;
     });
     hasMore = true;
-    refresh();
+    if (Constants.showData) {
+      refresh();
+    }
   }
 
   Future<void> refresh() {

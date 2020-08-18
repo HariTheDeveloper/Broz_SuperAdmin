@@ -18,8 +18,19 @@ Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
       body: jsonEncode(<String, dynamic>{
         "pageNumber": withPage,
         "pageSize": 10,
-        'userId': Constants.userID
+        'userId': Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
       }));
+
+  var params = jsonEncode(<String, dynamic>{
+    "pageNumber": withPage,
+    "pageSize": 10,
+    'userId': Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+  print('request params ${params} ** ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {
@@ -51,7 +62,9 @@ class RestaurantStreamModel {
       return postsData;
     });
     hasMore = true;
-    refresh();
+    if (Constants.showData) {
+      refresh();
+    }
   }
 
   Future<void> refresh() {

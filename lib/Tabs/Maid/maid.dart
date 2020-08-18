@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:push_notification/List/listcell.dart';
 import 'package:push_notification/Tabs/Maid/maidModel.dart';
+import 'package:push_notification/Utitlity/Constants.dart';
 
 class MaidScreen extends StatefulWidget {
   @override
@@ -13,7 +14,8 @@ class _MaidScreenState extends State<MaidScreen> {
 
   @override
   void initState() {
-    streamModel = MaidStreamModel();
+streamModel = MaidStreamModel();
+  
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -32,7 +34,7 @@ class _MaidScreenState extends State<MaidScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Constants.showData ? Scaffold(
       body: StreamBuilder(
         stream: streamModel.stream,
         builder: (BuildContext _context, AsyncSnapshot _snapshot) {
@@ -43,6 +45,7 @@ class _MaidScreenState extends State<MaidScreen> {
                         new AlwaysStoppedAnimation<Color>(Colors.green[300])));
           } else if (_snapshot.data.length > 0) {
             return RefreshIndicator(
+               color: Colors.black,
               onRefresh: streamModel.refresh,
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -81,6 +84,13 @@ class _MaidScreenState extends State<MaidScreen> {
           }
         },
       ),
-    );
+    ): Center(
+            child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'You are not authorized to view this.\nPlease contact admin !',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+          ));
   }
 }

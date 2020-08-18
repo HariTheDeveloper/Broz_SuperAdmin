@@ -15,14 +15,17 @@ var _defaultApiHeaders = {
 Future<List<OrderJson>> _getLaundryOrdersList(int withPage) async {
   // laundry.pasubot.com
 
-  final data = await http.post(
-      "http://laundry.brozapp.com/api/past/appointment/list",
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        "pageSize": 10,
-        "pageNumber": withPage,
-        "clientId": Constants.userID
-      }));
+  final data =
+      await http.post("http://laundry.brozapp.com/api/past/appointment/list",
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            "pageSize": 10,
+            "pageNumber": withPage,
+            "clientId": Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
+          print('request params ${data.body} ** ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {
@@ -54,7 +57,9 @@ class LaundryStreamModel {
       return postsData;
     });
     hasMore = true;
-    refresh();
+    if (Constants.showData) {
+      refresh();
+    }
   }
 
   Future<void> refresh() {

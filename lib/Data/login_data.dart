@@ -21,7 +21,7 @@ class LoginRequest {
       this.language});
 
   Map<String, dynamic> toJson() => {
-        "phoneNumber": phoneNumber,
+        "phone": phoneNumber,
         "countryCode": countryCode,
         "deviceId": deviceId,
         "deviceToken": deviceToken,
@@ -43,7 +43,7 @@ class Login {
     return Login(
       status: json['status'],
       message: json['message'],
-      details: LoginDetails.fromJson(json['detail']),
+      details: json['responseData'] != null ?  LoginDetails.fromJson(json['responseData']) : null,
     );
   }
 }
@@ -77,7 +77,7 @@ class LoginDetails {
     return LoginDetails(
       userId: json['userId'],
       countryCode: json['countryCode'],
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: json['phone'],
       token: json['token'],
       isNewUser: json['isNewUser'],
       userEmail: json['userEmail'],

@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:push_notification/Login/logout/logout.dart';
+import 'package:flutter/services.dart';
 import 'package:push_notification/Tabs/Barber/barber.dart';
 import 'package:push_notification/Tabs/Grocery/grocery.dart';
 import 'package:push_notification/Tabs/Laundry/laundry.dart';
 import 'package:push_notification/Tabs/Maid/maid.dart';
 import 'package:push_notification/Tabs/Restaurant/restaurant.dart';
 import 'package:push_notification/Push/push.dart';
+import 'package:push_notification/Utitlity/Constants.dart';
 import 'package:push_notification/main.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,14 +18,33 @@ class AllServicesPage extends StatefulWidget {
   _AllServicesPageState createState() => _AllServicesPageState();
 }
 
-class _AllServicesPageState extends State<AllServicesPage> {
-  List<Map<String, dynamic>> tabsArray = [];
+class _AllServicesPageState extends State<AllServicesPage>
+    with SingleTickerProviderStateMixin {
+  List<Map<String, dynamic>> tabsArray = [
+    {"title": "Supermarket", "id": 1},
+    {"title": "Restaurant", "id": 5},
+    {"title": "Hair&Beauty", "id": 2},
+    {"title": "Laundry", "id": 4},
+    {"title": "Home Cleaning", "id": 3}
+  ];
+
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Constants.showData = Constants.userType == 0
+        ? true
+        : tabsArray[selectedIndex]['id'] == Constants.userType ? true : false;
+  }
+
   @override
   Widget build(BuildContext context) {
+  
     tabsArray = [
       {
-        "title": "Grocery",
+        "title": "Supermarket",
+        "id":Constants.grocery,
         "icon": Image.asset(
           "assets/grocery.png",
           width: 24,
@@ -33,18 +53,20 @@ class _AllServicesPageState extends State<AllServicesPage> {
         )
       },
       {
-        "title": "Barber",
+        "title": "Restaurant",
+        "id":Constants.restaurant,
         "icon": Image.asset(
-          "assets/barber.png",
+          "assets/restaurant.png",
           width: 24,
           height: 24,
           color: selectedIndex == 1 ? Colors.green : Colors.grey,
         )
       },
       {
-        "title": "Maid",
+        "title": "Hair&Beauty",
+        "id":Constants.barber,
         "icon": Image.asset(
-          "assets/maid.png",
+          "assets/barber.png",
           width: 24,
           height: 24,
           color: selectedIndex == 2 ? Colors.green : Colors.grey,
@@ -52,6 +74,7 @@ class _AllServicesPageState extends State<AllServicesPage> {
       },
       {
         "title": "Laundry",
+        "id":Constants.laundry,
         "icon": Image.asset(
           "assets/laundry.png",
           width: 24,
@@ -60,16 +83,19 @@ class _AllServicesPageState extends State<AllServicesPage> {
         )
       },
       {
-        "title": "Restaurant",
+        "title": "Home Cleaning",
+        "id":Constants.maid,
         "icon": Image.asset(
-          "assets/restaurant.png",
+          "assets/maid.png",
           width: 24,
           height: 24,
           color: selectedIndex == 4 ? Colors.green : Colors.grey,
         )
-      }
+      },
     ];
-    return bottomTabViewSetup(context);
+    return WillPopScope(
+        child: bottomTabViewSetup(context),
+        onWillPop: () => SystemNavigator.pop());
   }
 
   Widget bottomTabViewSetup(BuildContext context) {
@@ -80,6 +106,7 @@ class _AllServicesPageState extends State<AllServicesPage> {
         length: tabsArray.length,
         child: Scaffold(
           appBar: AppBar(
+            centerTitle: false,
             title: Text(
               "${title["title"]}",
               style: TextStyle(color: Colors.white),
@@ -92,9 +119,9 @@ class _AllServicesPageState extends State<AllServicesPage> {
                 ),
                 onPressed: () {
                   Alert(
-                     style: AlertStyle(
-            isCloseButton: false,
-          ),
+                    style: AlertStyle(
+                      isCloseButton: false,
+                    ),
                     context: context,
                     type: AlertType.none,
                     title: "Broz",
@@ -156,10 +183,10 @@ class _AllServicesPageState extends State<AllServicesPage> {
             physics: NeverScrollableScrollPhysics(),
             children: [
               GroceryScreen(),
-              BarberScreen(),
-              MaidScreen(),
-              LaundryScreen(),
               RestaurantScreen(),
+              BarberScreen(),
+              LaundryScreen(),
+              MaidScreen(),
             ],
           ),
           bottomNavigationBar: Padding(
@@ -173,6 +200,11 @@ class _AllServicesPageState extends State<AllServicesPage> {
               onTap: (value) {
                 setState(() {
                   selectedIndex = value;
+                  Constants.showData = Constants.userType == 0
+                      ? true
+                      : tabsArray[value]['id'] == Constants.userType
+                          ? true
+                          : false;
                 });
               },
               tabs: _getTabs(),

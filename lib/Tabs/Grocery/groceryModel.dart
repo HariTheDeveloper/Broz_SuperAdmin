@@ -41,15 +41,16 @@ var _defaultApiHeaders = {
 // }
 
 Future<List<OrderJson>> _getOrdersList(int pageNumber) async {
-  
   final data = await http.post("https://brozapp.com/api/morderDetails",
       headers: _defaultApiHeaders,
       body: jsonEncode(<String, dynamic>{
         'pageNumber': pageNumber,
         'pageSize': 10,
-        'userId': Constants.userID
+        'userId': Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
       }));
-
+print('request params ${data.body} ** ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {
@@ -84,7 +85,9 @@ class StreamModel {
     });
     hasMore = true;
     reachedBottom = false;
-    refresh();
+    if (Constants.showData) {
+      refresh();
+    }
   }
 
   Future<void> refresh() {
