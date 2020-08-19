@@ -64,7 +64,7 @@ class MyHomePageState extends State<MyHomePage>
     });
 
     outletID = _prefs.then((SharedPreferences prefs) {
-      return prefs.getStringList("outletID") ?? 0;
+      return prefs.getStringList("outletID") ?? ["0"];
     });
 
     useriD.then((value) {
@@ -98,7 +98,10 @@ class MyHomePageState extends State<MyHomePage>
                   valueColor: AlwaysStoppedAnimation(Colors.green));
             default:
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Error: ${snapshot.error}'),
+                );
               } else {
                 return Container();
               }

@@ -8,6 +8,7 @@ import 'package:push_notification/Tabs/Laundry/laundry.dart';
 import 'package:push_notification/Tabs/Maid/maid.dart';
 import 'package:push_notification/Tabs/Restaurant/restaurant.dart';
 import 'package:push_notification/Push/push.dart';
+import 'package:push_notification/Tabs/UserLogs/user_logs.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 import 'package:push_notification/main.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -25,7 +26,8 @@ class _AllServicesPageState extends State<AllServicesPage>
     {"title": "Restaurant", "id": 5},
     {"title": "Hair&Beauty", "id": 2},
     {"title": "Laundry", "id": 4},
-    {"title": "Home Cleaning", "id": 3}
+    {"title": "Home Cleaning", "id": 3},
+    {"title": "User Logs", "id": 6}
   ];
 
   int selectedIndex = 0;
@@ -40,11 +42,10 @@ class _AllServicesPageState extends State<AllServicesPage>
 
   @override
   Widget build(BuildContext context) {
-  
     tabsArray = [
       {
         "title": "Supermarket",
-        "id":Constants.grocery,
+        "id": Constants.grocery,
         "icon": Image.asset(
           "assets/grocery.png",
           width: 24,
@@ -54,7 +55,7 @@ class _AllServicesPageState extends State<AllServicesPage>
       },
       {
         "title": "Restaurant",
-        "id":Constants.restaurant,
+        "id": Constants.restaurant,
         "icon": Image.asset(
           "assets/restaurant.png",
           width: 24,
@@ -64,7 +65,7 @@ class _AllServicesPageState extends State<AllServicesPage>
       },
       {
         "title": "Hair&Beauty",
-        "id":Constants.barber,
+        "id": Constants.barber,
         "icon": Image.asset(
           "assets/barber.png",
           width: 24,
@@ -74,7 +75,7 @@ class _AllServicesPageState extends State<AllServicesPage>
       },
       {
         "title": "Laundry",
-        "id":Constants.laundry,
+        "id": Constants.laundry,
         "icon": Image.asset(
           "assets/laundry.png",
           width: 24,
@@ -84,12 +85,22 @@ class _AllServicesPageState extends State<AllServicesPage>
       },
       {
         "title": "Home Cleaning",
-        "id":Constants.maid,
+        "id": Constants.maid,
         "icon": Image.asset(
           "assets/maid.png",
           width: 24,
           height: 24,
           color: selectedIndex == 4 ? Colors.green : Colors.grey,
+        )
+      },
+      {
+        "title": "User Logs",
+        "id": Constants.maid,
+        "icon": Image.asset(
+          "assets/logs.png",
+          width: 24,
+          height: 24,
+          color: selectedIndex == 5 ? Colors.green : Colors.grey,
         )
       },
     ];
@@ -187,6 +198,7 @@ class _AllServicesPageState extends State<AllServicesPage>
               BarberScreen(),
               LaundryScreen(),
               MaidScreen(),
+              UserLogsScreen()
             ],
           ),
           bottomNavigationBar: Padding(

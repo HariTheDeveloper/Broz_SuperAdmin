@@ -310,6 +310,6 @@ class _PasswordPageState extends State<PasswordPage> {
     Navigator.push(
         context,
         PageTransition(
-            child: AllServicesPage(), type: PageTransitionType.scale));
+            child: AllServicesPage(), type: PageTransitionType.leftToRight));
   }
 }
