@@ -69,9 +69,9 @@ class _UserLogsScreenState extends State<UserLogsScreen> {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 32.0),
                             child: Align(
-                              child: _snapshot.data.length > 6
+                              child: _snapshot.data.length > 4
                                   ? Text('Nothing more to load !')
-                                  : Container(),
+                                  : SizedBox.shrink(),
                               alignment: Alignment.center,
                             ),
                           );

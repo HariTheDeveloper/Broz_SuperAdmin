@@ -75,7 +75,7 @@ class LoginDetails {
 
   factory LoginDetails.fromJson(Map<String, dynamic> json) {
     return LoginDetails(
-      userId: json['userId'],
+      userId: json['id'],
       countryCode: json['countryCode'],
       phoneNumber: json['phone'],
       token: json['token'],

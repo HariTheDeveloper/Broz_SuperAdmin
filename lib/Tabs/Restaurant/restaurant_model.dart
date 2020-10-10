@@ -88,7 +88,7 @@ class RestaurantStreamModel {
       _data.addAll(postsData);
       pageNumber += 1;
       reachedBottom = false;
-      hasMore = (postsData.length > 0) && reachedBottom;
+      hasMore = (postsData.length > 0) || reachedBottom;
       _controller.add(_data);
     });
   }

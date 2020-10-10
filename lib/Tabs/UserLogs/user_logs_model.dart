@@ -22,7 +22,14 @@ Future<List<UsersLogs>> _getUsersLogList(int withPage) async {
         'userType': Constants.userType,
         'outletId': Constants.outletID
       }));
-
+  var params = jsonEncode(<String, dynamic>{
+    "pageNumber": withPage,
+    "pageSize": 10,
+    'userId': Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+  print('request params ${params} ** ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 1) {
@@ -80,7 +87,7 @@ class UserLogsStreamModel {
       _data.addAll(postsData);
       pageNumber += 1;
       reachedBottom = false;
-      hasMore = (postsData.length > 0) && reachedBottom;
+      hasMore = false;
       _controller.add(_data);
     });
   }

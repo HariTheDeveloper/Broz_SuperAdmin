@@ -6,6 +6,7 @@ import 'package:push_notification/Tabs/Barber/barber.dart';
 import 'package:push_notification/Tabs/Grocery/grocery.dart';
 import 'package:push_notification/Tabs/Laundry/laundry.dart';
 import 'package:push_notification/Tabs/Maid/maid.dart';
+import 'package:push_notification/Tabs/OfferLogs/offers.dart';
 import 'package:push_notification/Tabs/Restaurant/restaurant.dart';
 import 'package:push_notification/Push/push.dart';
 import 'package:push_notification/Tabs/UserLogs/user_logs.dart';
@@ -27,7 +28,8 @@ class _AllServicesPageState extends State<AllServicesPage>
     {"title": "Hair&Beauty", "id": 2},
     {"title": "Laundry", "id": 4},
     {"title": "Home Cleaning", "id": 3},
-    {"title": "User Logs", "id": 6}
+    {"title": "User Logs", "id": 6},
+    {"title": "Offer Logs", "id": 7}
   ];
 
   int selectedIndex = 0;
@@ -95,12 +97,22 @@ class _AllServicesPageState extends State<AllServicesPage>
       },
       {
         "title": "User Logs",
-        "id": Constants.maid,
+        "id": Constants.userLogs,
         "icon": Image.asset(
           "assets/logs.png",
           width: 24,
           height: 24,
           color: selectedIndex == 5 ? Colors.green : Colors.grey,
+        )
+      },
+      {
+        "title": "Offer Logs",
+        "id": Constants.offerLogs,
+        "icon": Image.asset(
+          "assets/offer.png",
+          width: 24,
+          height: 24,
+          color: selectedIndex == 6 ? Colors.green : Colors.grey,
         )
       },
     ];
@@ -198,7 +210,8 @@ class _AllServicesPageState extends State<AllServicesPage>
               BarberScreen(),
               LaundryScreen(),
               MaidScreen(),
-              UserLogsScreen()
+              UserLogsScreen(),
+              OffersScreen()
             ],
           ),
           bottomNavigationBar: Padding(

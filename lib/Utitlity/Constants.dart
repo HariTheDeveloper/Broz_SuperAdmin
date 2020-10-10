@@ -30,4 +30,6 @@ class Constants {
   static int maid = 3;
   static int laundry = 4;
   static int restaurant = 5;
+  static int userLogs = 6;
+  static int offerLogs = 7;
 }

@@ -86,7 +86,7 @@ class PasswordDetails {
       final Iterable outletId = json['outletId'];
       // print("Outlet ID: $outletId");
       return PasswordDetails(
-          userId: json['userId'],
+          userId: json['id'],
           countryCode: json['countryCode'],
           phoneNumber: json['phoneNumber'],
           token: json['token'],
