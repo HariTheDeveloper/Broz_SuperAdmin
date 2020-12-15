@@ -24,6 +24,15 @@ Future<List<OrderJson>> _getBarberOrdersList(int withPage) async {
             'userType': Constants.userType,
             'outletId': Constants.outletID
           }));
+  var params = jsonEncode(<String, dynamic>{
+    "pageNumber": withPage,
+    "pageSize": 10,
+    "clientId": Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+  print(
+      'request params ${params} ** http://barber.brozapp.com/api/past/appointment/list ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {

@@ -13,17 +13,26 @@ var _defaultApiHeaders = {
 };
 
 Future<List<OrderJson>> _getMaidOrdersList(int withPage) async {
-  final data = await http.post(
-      "http://maid.brozapp.com/api/past/appointment/list",
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": withPage,
-        "pageSize": 10,
-        "clientId": Constants.userID,
-        'userType': Constants.userType,
-        'outletId': Constants.outletID
-      }));
-      print('request params ${data.body} ** ');
+  final data =
+      await http.post("http://maid.brozapp.com/api/past/appointment/list",
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            "pageNumber": withPage,
+            "pageSize": 10,
+            "clientId": Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
+  var params = jsonEncode(<String, dynamic>{
+    "pageNumber": withPage,
+    "pageSize": 10,
+    "clientId": Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+
+  print(
+      'request params ${params} ** http://maid.brozapp.com/api/past/appointment/list ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {

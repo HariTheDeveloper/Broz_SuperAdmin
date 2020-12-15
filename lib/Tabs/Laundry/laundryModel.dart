@@ -25,7 +25,15 @@ Future<List<OrderJson>> _getLaundryOrdersList(int withPage) async {
             'userType': Constants.userType,
             'outletId': Constants.outletID
           }));
-          print('request params ${data.body} ** ');
+  var params = jsonEncode(<String, dynamic>{
+    "pageSize": 10,
+    "pageNumber": withPage,
+    "clientId": Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+  print(
+      'request params ${params} ** http://laundry.brozapp.com/api/past/appointment/list ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["httpCode"] == 200) {

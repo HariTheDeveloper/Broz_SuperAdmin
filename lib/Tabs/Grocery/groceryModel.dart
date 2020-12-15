@@ -50,7 +50,14 @@ Future<List<OrderJson>> _getOrdersList(int pageNumber) async {
         'userType': Constants.userType,
         'outletId': Constants.outletID
       }));
-print('request params ${data.body} ** ');
+  var params = jsonEncode(<String, dynamic>{
+    'pageNumber': pageNumber,
+    'pageSize': 10,
+    'userId': Constants.userID,
+    'userType': Constants.userType,
+    'outletId': Constants.outletID
+  });
+  print('request params ${params} ** https://brozapp.com/api/morderDetails ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {

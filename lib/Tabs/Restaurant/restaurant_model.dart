@@ -30,7 +30,9 @@ Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
     'userType': Constants.userType,
     'outletId': Constants.outletID
   });
-  print('request params ${params} ** ');
+
+  print(
+      'request params ${params} ** https://rest.fuzionest.com/api/morderDetails ');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {

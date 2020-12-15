@@ -39,7 +39,9 @@ class _AllServicesPageState extends State<AllServicesPage>
     super.initState();
     Constants.showData = Constants.userType == 0
         ? true
-        : tabsArray[selectedIndex]['id'] == Constants.userType ? true : false;
+        : tabsArray[selectedIndex]['id'] == Constants.userType
+            ? true
+            : false;
   }
 
   @override
@@ -167,10 +169,7 @@ class _AllServicesPageState extends State<AllServicesPage>
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         onPressed: () => Navigator.pop(context),
-                        gradient: LinearGradient(colors: [
-                          Color.fromRGBO(116, 116, 191, 1.0),
-                          Color.fromRGBO(52, 138, 199, 1.0)
-                        ]),
+                        color: Colors.black,
                       )
                     ],
                   ).show();
