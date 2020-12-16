@@ -7,6 +7,7 @@ import 'package:push_notification/Data/login_data.dart';
 import 'package:push_notification/Data/otpVerify_data.dart';
 import 'package:push_notification/Data/password_check_data.dart';
 import 'package:push_notification/Data/signup_data.dart';
+import 'package:push_notification/Data/update_customer_data.dart';
 
 class Resource<T> {
   final String url;
@@ -55,6 +56,14 @@ Future<ForgotPasswordResponse> forgotPassword<T>(Resource<T> resource) async {
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return forgotpasswordFromJson(response.body);
+}
+
+Future<UpdateCustomerResponse> updateCustomer<T>(Resource<T> resource) async {
+  print('request params ${resource.request} ** ${resource.url}');
+  final response = await http.post(resource.url,
+      headers: _defaultApiHeaders, body: resource.request);
+  print("Response body: ${response.body}");
+  return updateCustomerFromJson(response.body);
 }
 
 Future<ForgotOtpResponse> forgotOtp<T>(Resource<T> resource) async {

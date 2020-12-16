@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:push_notification/Tabs/Barber/barber.dart';
+import 'package:push_notification/Tabs/CustomerProfiles/customer_show_screen.dart';
 import 'package:push_notification/Tabs/Grocery/grocery.dart';
 import 'package:push_notification/Tabs/Laundry/laundry.dart';
 import 'package:push_notification/Tabs/Maid/maid.dart';
@@ -29,7 +30,8 @@ class _AllServicesPageState extends State<AllServicesPage>
     {"title": "Laundry", "id": 4},
     {"title": "Home Cleaning", "id": 3},
     {"title": "User Logs", "id": 6},
-    {"title": "Offer Logs", "id": 7}
+    {"title": "Offer Logs", "id": 7},
+    {"title": "Customer Logs", "id": 8}
   ];
 
   int selectedIndex = 0;
@@ -117,6 +119,15 @@ class _AllServicesPageState extends State<AllServicesPage>
           color: selectedIndex == 6 ? Colors.green : Colors.grey,
         )
       },
+      {
+        "title": "Customer Logs",
+        "id": Constants.userLogs,
+        "icon": Container(
+          height: 24,
+          width: 24,
+          child: Icon(Icons.group),
+        )
+      }
     ];
     return WillPopScope(
         child: bottomTabViewSetup(context),
@@ -210,7 +221,8 @@ class _AllServicesPageState extends State<AllServicesPage>
               LaundryScreen(),
               MaidScreen(),
               UserLogsScreen(),
-              OffersScreen()
+              OffersScreen(),
+              ShowCustomersScreen()
             ],
           ),
           bottomNavigationBar: Padding(
