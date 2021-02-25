@@ -39,7 +39,6 @@ class MobileLoginPageState extends State<MobileLoginPage> {
     super.initState();
     showLoader = false;
     initialize();
-   
   }
 
   @override

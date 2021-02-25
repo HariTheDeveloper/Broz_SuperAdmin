@@ -15,12 +15,9 @@ Future<List<CustomerLogs>> _getCustomersList(int withPage) async {
   final data = await http.post("http://user.brozapp.com/api/userCallLogs",
       headers: _defaultApiHeaders,
       body: jsonEncode(<String, dynamic>{
-        "pageNumber": withPage,
-        "pageSize": 10,
-        'userId': Constants.userID,
         'userType': Constants.userType,
-        'outletId': Constants.outletID,
       }));
+
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 1) {

@@ -9,8 +9,7 @@ import 'package:push_notification/Utitlity/Constants.dart';
 import 'package:push_notification/WebService/webservice.dart';
 import 'package:push_notification/app_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShowCustomersScreen extends StatefulWidget {
   @override
@@ -136,6 +135,15 @@ class _ShowCustomersScreenState extends State<ShowCustomersScreen> {
           ));
   }
 
+  _launchCaller(String mobileNo) async {
+    var url = "tel:$mobileNo";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   _showCustomerWidget(CustomerLogs offersJson) {
     return Container(
       padding: EdgeInsets.all(8),
@@ -199,12 +207,17 @@ class _ShowCustomersScreenState extends State<ShowCustomersScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    "Mobile: ${offersJson.userPhone}",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14,
+                  child: InkWell(
+                    onTap: () {
+                      _launchCaller(offersJson.userPhone);
+                    },
+                    child: Text(
+                      "Mobile: ${offersJson.userPhone}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
@@ -228,7 +241,7 @@ class _ShowCustomersScreenState extends State<ShowCustomersScreen> {
                               color: Colors.green,
                               borderRadius: BorderRadius.circular(8)),
                           child: Text(
-                            "Make a Call",
+                            "Mark as Called",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,

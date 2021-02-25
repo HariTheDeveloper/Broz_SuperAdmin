@@ -66,7 +66,6 @@ class MyHomePageState extends State<MyHomePage>
     outletID = _prefs.then((SharedPreferences prefs) {
       return prefs.getStringList("outletID") ?? ["0"];
     });
-
     useriD.then((value) {
       Constants.userID = value;
     });
