@@ -33,3 +33,8 @@ class Constants {
   static int userLogs = 6;
   static int offerLogs = 7;
 }
+
+const String DELIEVERD = "delivered";
+const String CANCELLED = "cancelled";
+const String DISPATCHED = "dispatched";
+const String COMPLETED = "completed";

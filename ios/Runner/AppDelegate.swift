@@ -15,9 +15,13 @@ import UserNotifications
         let settings: UIUserNotificationSettings =
          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
          application.registerUserNotificationSettings(settings)
-        
     }
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+    
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+
+      super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
 }

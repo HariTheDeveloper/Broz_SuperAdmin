@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:push_notification/Utitlity/Constants.dart';
 
 class OrderJson {
   final String outletName;
@@ -9,6 +10,7 @@ class OrderJson {
   final String appointmentDate;
   final String totalCost;
   final String statusName;
+  final int statusId;
   OrderJson(
       {this.outletName,
       this.customerName,
@@ -17,6 +19,7 @@ class OrderJson {
       this.createdDate,
       this.appointmentDate,
       this.totalCost,
+      this.statusId,
       this.statusName});
 
   factory OrderJson.fromJson(Map<String, dynamic> jsonData) {
@@ -28,7 +31,8 @@ class OrderJson {
         createdDate: jsonData['createdDate'],
         appointmentDate: jsonData['appointmentDate'],
         totalCost: jsonData['totalCost'],
-        statusName: jsonData['statusName']);
+        statusId: jsonData['statusId'] ?? 0,
+        statusName: jsonData['statusName'] ?? "");
   }
 }
 
@@ -41,6 +45,9 @@ class ListCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: orderProcessed(ordersJson.statusName.replaceAll(" ", ""))
+          ? Colors.white
+          : Colors.red,
       padding: EdgeInsets.all(8),
       child: Column(
         children: [
@@ -80,7 +87,10 @@ class ListCell extends StatelessWidget {
                   child: Text(
                     "${ordersJson.createdDate}",
                     style: TextStyle(
-                      color: Colors.green,
+                      color: orderProcessed(
+                              ordersJson.statusName.replaceAll(" ", ""))
+                          ? Colors.green
+                          : Colors.white,
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
                     ),
@@ -114,8 +124,10 @@ class ListCell extends StatelessWidget {
                 Text(
                   "${ordersJson.statusName}",
                   style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
+                    color: getColorForStatus(
+                        ordersJson.statusName.replaceAll(" ", "")),
+                    fontWeight: getFontWeight(
+                        ordersJson.statusName.replaceAll(" ", "")),
                     fontSize: 14,
                   ),
                 ),
@@ -150,5 +162,43 @@ class ListCell extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool orderProcessed(String status) {
+    switch (status.toLowerCase()) {
+      case DELIEVERD:
+      case CANCELLED:
+      case DISPATCHED:
+      case COMPLETED:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  Color getColorForStatus(String status) {
+    switch (status.toLowerCase()) {
+      case DELIEVERD:
+      case COMPLETED:
+        return Colors.green;
+      case CANCELLED:
+        return Colors.red;
+      case DISPATCHED:
+        return Colors.blueAccent;
+      default:
+        return Colors.black;
+    }
+  }
+
+  FontWeight getFontWeight(String status) {
+    switch (status.toLowerCase()) {
+      case DELIEVERD:
+      case COMPLETED:
+      case CANCELLED:
+      case DISPATCHED:
+        return FontWeight.bold;
+      default:
+        return FontWeight.normal;
+    }
   }
 }

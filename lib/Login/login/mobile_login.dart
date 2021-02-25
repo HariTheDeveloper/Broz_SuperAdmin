@@ -31,14 +31,13 @@ class MobileLoginPageState extends State<MobileLoginPage> {
   bool isCountrySelected = false;
   final myController = TextEditingController();
   static FirebaseMessaging fcm = FirebaseMessaging();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+
   OverlayEntry overlayEntry;
 
   void initState() {
     super.initState();
+
     showLoader = false;
-    initialize();
   }
 
   @override
@@ -47,77 +46,6 @@ class MobileLoginPageState extends State<MobileLoginPage> {
     myController.dispose();
     showLoader = false;
     super.dispose();
-  }
-
-  Future initialize() async {
-    Constants.deviceId = await DeviceId.getID;
-    print(Constants.deviceId);
-
-    var android = AndroidInitializationSettings('mipmap/ic_launcher');
-    var ios = IOSInitializationSettings();
-    var platform = InitializationSettings(android, ios);
-    flutterLocalNotificationsPlugin.initialize(platform);
-
-    if (Platform.isIOS) {
-      fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
-
-    fcm.configure(
-        onBackgroundMessage:
-            Platform.isAndroid ? fcmBackgroundMessageHandler : null,
-
-        //called when app is in foreground and we receive notifications
-        onMessage: (Map<String, dynamic> message) async {
-          print("on Message :$message");
-          if (Platform.isAndroid) {
-            showNotification(message["notification"]["title"],
-                message["notification"]["body"]);
-          } else {
-            showNotification(message["aps"]["alert"]["title"],
-                message["aps"]["alert"]["body"]);
-          }
-        },
-        //called when app is closed completely and opened when we receive notifications
-        onLaunch: (Map<String, dynamic> message) async {
-          print("on Launch :$message");
-        },
-        //called when app is in background and we receive notifications
-        onResume: (Map<String, dynamic> message) async {
-          print("on Resume :$message");
-        });
-  }
-
-  showNotification(String title, String message) async {
-    print("Message :$title");
-    var android = AndroidNotificationDetails(
-      'Broz_Admin_01',
-      "Broz_Admin",
-      "Offer Notification",
-      icon: "ic_launcher_",
-      sound: RawResourceAndroidNotificationSound('notification'),
-      playSound: true,
-    );
-    var iOS = IOSNotificationDetails();
-    var platform = NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(0, title, message, platform);
-  }
-
-  static Future<dynamic> fcmBackgroundMessageHandler(
-      Map<String, dynamic> message) {
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-      return notification;
-    }
-
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-      return data;
-    }
-
-    return null;
-    // Or do other work.
   }
 
   @override
