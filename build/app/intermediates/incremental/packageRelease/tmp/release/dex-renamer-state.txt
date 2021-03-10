@@ -1,4 +1,0 @@
-#Tue Dec 15 17:00:16 PST 2020
-base.0=/Users/brozapp/Documents/Flutter/BrozAdmin/Broz_SuperAdmin/build/app/intermediates/transforms/r8/release/0/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
