@@ -13,15 +13,16 @@ var _defaultApiHeaders = {
 };
 
 Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
-  final data = await http.post("https://rest.fuzionest.com/api/morderDetails",
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": withPage,
-        "pageSize": 10,
-        'userId': Constants.userID,
-        'userType': Constants.userType,
-        'outletId': Constants.outletID
-      }));
+  final data =
+      await http.post("https://restaurant.brozapp.com/api/morderDetails",
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            "pageNumber": withPage,
+            "pageSize": 10,
+            'userId': Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
 
   var params = jsonEncode(<String, dynamic>{
     "pageNumber": withPage,
@@ -32,7 +33,7 @@ Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
   });
 
   print(
-      'request params ${params} ** https://rest.fuzionest.com/api/morderDetails ');
+      'request params ${params} ** https://restaurant.brozapp.com/api/morderDetails');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 200) {
