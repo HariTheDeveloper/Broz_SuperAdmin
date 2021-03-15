@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -38,3 +40,11 @@ const String DELIEVERD = "delivered";
 const String CANCELLED = "cancelled";
 const String DISPATCHED = "dispatched";
 const String COMPLETED = "completed";
+
+bool isIphoneXorNot(BuildContext context) {
+  return Platform.isIOS
+      ? MediaQuery.of(context).size.height >= 812
+          ? true
+          : false
+      : false;
+}

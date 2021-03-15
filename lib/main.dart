@@ -10,6 +10,7 @@ import 'package:push_notification/Login/login/mobile_login.dart';
 import 'package:push_notification/Tabs/allservices_tab.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 
 void main() => runApp(new MyApp());
 
@@ -183,7 +184,9 @@ class MyHomePageState extends State<MyHomePage>
         presentAlert: true, presentSound: true, sound: 'truckHorn.wav');
     var platform = NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin.show(0, title, message, platform);
-    //_playAlert();
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(duration: 3000);
+    }
   }
 
   static Future<dynamic> fcmBackgroundMessageHandler(

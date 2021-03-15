@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:push_notification/List/listcell.dart';
+import 'package:push_notification/OrderDetail/order_detail.dart';
 import 'package:push_notification/Tabs/Grocery/groceryModel.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 
@@ -17,9 +18,8 @@ class _GroceryScreenState extends State<GroceryScreen> {
   StreamModel streamModel;
   @override
   void initState() {
-    
-      streamModel = StreamModel();
-    
+    streamModel = StreamModel();
+
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -40,6 +40,7 @@ class _GroceryScreenState extends State<GroceryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Constants.showData
           ? StreamBuilder(
               stream: streamModel.stream,
@@ -54,13 +55,16 @@ class _GroceryScreenState extends State<GroceryScreen> {
                     color: Colors.black,
                     onRefresh: streamModel.refresh,
                     child: ListView.separated(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      // padding: EdgeInsets.symmetric(vertical: 8.0),
                       controller: scrollController,
                       separatorBuilder: (context, index) => Divider(),
                       itemCount: _snapshot.data.length + 1,
                       itemBuilder: (BuildContext _context, int index) {
                         if (index < _snapshot.data.length) {
-                          return ListCell(ordersJson: _snapshot.data[index]);
+                          return ListCell(
+                            ordersJson: _snapshot.data[index],
+                            service: OrderedService.grocery,
+                          );
                         } else if (streamModel.hasMore) {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 32.0),

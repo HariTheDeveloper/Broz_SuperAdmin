@@ -52,60 +52,65 @@ class _UserLogDetailsState extends State<UserLogDetails> {
               automaticallyImplyLeading: false,
               backgroundColor: Colors.green,
             ),
-            body: StreamBuilder(
-              stream: streamModel.stream,
-              builder: (BuildContext _context, AsyncSnapshot _snapshot) {
-                if (!_snapshot.hasData) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                          valueColor: new AlwaysStoppedAnimation<Color>(
-                              Colors.green[300])));
-                } else if (_snapshot.data.length > 0) {
-                  return RefreshIndicator(
-                    color: Colors.black,
-                    onRefresh: streamModel.refresh,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      controller: scrollController,
-                      separatorBuilder: (context, index) => Divider(),
-                      itemCount: _snapshot.data.length + 1,
-                      itemBuilder: (BuildContext _context, int index) {
-                        if (index < _snapshot.data.length) {
-                          return UserListCell(
-                            ordersJson: _snapshot.data[index],
-                            enable: false,
-                          );
-                        } else if (streamModel.hasMore) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 32.0),
-                            child: Center(
-                                child: CircularProgressIndicator(
-                                    valueColor:
-                                        new AlwaysStoppedAnimation<Color>(
-                                            Colors.green[300]))),
-                          );
-                        } else {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 32.0),
-                            child: Align(
-                              child: _snapshot.data.length > 6
-                                  ? Text('Nothing more to load !')
-                                  : Container(),
-                              alignment: Alignment.center,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                } else {
-                  return Center(
-                      child: Text(
-                    'No data found !',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ));
-                }
-              },
+            body: Padding(
+              padding:
+                  EdgeInsets.only(bottom: isIphoneXorNot(context) ? 34 : 0),
+              child: StreamBuilder(
+                stream: streamModel.stream,
+                builder: (BuildContext _context, AsyncSnapshot _snapshot) {
+                  if (!_snapshot.hasData) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(
+                                Colors.green[300])));
+                  } else if (_snapshot.data.length > 0) {
+                    return RefreshIndicator(
+                      color: Colors.black,
+                      onRefresh: streamModel.refresh,
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        controller: scrollController,
+                        separatorBuilder: (context, index) => Divider(),
+                        itemCount: _snapshot.data.length + 1,
+                        itemBuilder: (BuildContext _context, int index) {
+                          if (index < _snapshot.data.length) {
+                            return UserListCell(
+                              ordersJson: _snapshot.data[index],
+                              enable: false,
+                            );
+                          } else if (streamModel.hasMore) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 32.0),
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                      valueColor:
+                                          new AlwaysStoppedAnimation<Color>(
+                                              Colors.green[300]))),
+                            );
+                          } else {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 32.0),
+                              child: Align(
+                                child: _snapshot.data.length > 6
+                                    ? Text('Nothing more to load !')
+                                    : Container(),
+                                alignment: Alignment.center,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  } else {
+                    return Center(
+                        child: Text(
+                      'No data found !',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ));
+                  }
+                },
+              ),
             ),
           )
         : Scaffold(

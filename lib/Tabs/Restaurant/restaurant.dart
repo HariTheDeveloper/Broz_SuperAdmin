@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:push_notification/List/listcell.dart';
+import 'package:push_notification/OrderDetail/order_detail.dart';
 import 'package:push_notification/Tabs/Restaurant/restaurant_model.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 
@@ -35,6 +36,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   Widget build(BuildContext context) {
     return Constants.showData
         ? Scaffold(
+            backgroundColor: Colors.white,
             body: StreamBuilder(
               stream: streamModel.stream,
               builder: (BuildContext _context, AsyncSnapshot _snapshot) {
@@ -54,7 +56,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       itemCount: _snapshot.data.length + 1,
                       itemBuilder: (BuildContext _context, int index) {
                         if (index < _snapshot.data.length) {
-                          return ListCell(ordersJson: _snapshot.data[index]);
+                          return ListCell(
+                            ordersJson: _snapshot.data[index],
+                            service: OrderedService.restaurant,
+                          );
                         } else if (streamModel.hasMore) {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 32.0),

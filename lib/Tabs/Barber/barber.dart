@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:push_notification/List/listcell.dart';
+import 'package:push_notification/OrderDetail/order_detail.dart';
 import 'package:push_notification/Tabs/Barber/barberModel.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 
@@ -14,7 +15,7 @@ class _BarberScreenState extends State<BarberScreen> {
 
   @override
   void initState() {
-streamModel = BarberStreamModel();
+    streamModel = BarberStreamModel();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -34,6 +35,7 @@ streamModel = BarberStreamModel();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Constants.showData
             ? StreamBuilder(
                 stream: streamModel.stream,
@@ -54,7 +56,10 @@ streamModel = BarberStreamModel();
                         itemCount: _snapshot.data.length + 1,
                         itemBuilder: (BuildContext _context, int index) {
                           if (index < _snapshot.data.length) {
-                            return ListCell(ordersJson: _snapshot.data[index]);
+                            return ListCell(
+                              ordersJson: _snapshot.data[index],
+                              service: OrderedService.barber,
+                            );
                           } else if (streamModel.hasMore) {
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 32.0),

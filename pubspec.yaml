@@ -45,6 +45,8 @@ dependencies:
   rflutter_alert: ^1.0.3
   loading_overlay: ^0.2.1
   just_audio: ^0.6.14+1
+  encrypt: ^4.1.0
+  vibration: ^1.7.3
 
 dev_dependencies:
   flutter_test:
