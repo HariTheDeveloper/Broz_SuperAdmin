@@ -165,28 +165,53 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
   Widget _orderStatusWidget() {
     var status = "";
     var id = -1;
-
+    var orderCancellationReason = "";
     switch (widget.orderDetailArguments.orderedService) {
       case OrderedService.grocery:
       case OrderedService.restaurant:
         status = orderDetailsResponse.orderData.name ?? "";
         id = orderDetailsResponse.orderData.orderStatus ?? 0;
+        orderCancellationReason = orderDetailsResponse
+                .trackData[orderDetailsResponse.trackData.length - 1]
+                .orderComments ??
+            "";
         break;
       default:
         status = appointmentDetailResponse.responseData.statusName ?? "";
         id = appointmentDetailResponse.responseData.appointmentStatus ?? 0;
+        orderCancellationReason =
+            appointmentDetailResponse.responseData.description ?? "";
     }
     return Container(
-      height: 50,
+      width: MediaQuery.of(context).size.width,
       decoration: customBorder(),
-      child: Center(
-        child: Text(
-          status,
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: getColorForStatus('$id')),
-        ),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            status,
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: getColorForStatus('$id')),
+          ),
+          status.toLowerCase() == "cancelled" &&
+                  orderCancellationReason.isNotEmpty
+              ? Text(
+                  status.toLowerCase() == "cancelled"
+                      ? orderCancellationReason.isEmpty
+                          ? ""
+                          : "Reason: $orderCancellationReason"
+                      : "",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey),
+                )
+              : SizedBox.shrink(),
+        ],
       ),
     );
   }

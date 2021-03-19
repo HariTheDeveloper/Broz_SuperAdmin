@@ -68,6 +68,7 @@ class ResponseData {
   Client client;
   Outlet outlet;
   String statusName;
+  
 
   ResponseData(
       {this.userAddress,
