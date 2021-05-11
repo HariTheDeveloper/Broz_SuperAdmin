@@ -30,7 +30,7 @@ class MobileLoginPageState extends State<MobileLoginPage> {
   bool showLoader = false;
   bool isCountrySelected = false;
   final myController = TextEditingController();
-  static FirebaseMessaging fcm = FirebaseMessaging();
+  static FirebaseMessaging fcm = FirebaseMessaging.instance;
 
   OverlayEntry overlayEntry;
 

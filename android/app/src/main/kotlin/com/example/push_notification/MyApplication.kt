@@ -1,5 +1,5 @@
 package com.example.push_notification
-
+/*
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
@@ -17,4 +17,4 @@ class MyApplication: FlutterApplication() , PluginRegistrantCallback {
         FirebaseMessagingPlugin.registerWith(registry?.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
 
     }
-}
+}*/

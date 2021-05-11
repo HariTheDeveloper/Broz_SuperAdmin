@@ -1,6 +1,5 @@
 import UIKit
 import Flutter
-import UserNotifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,20 +7,12 @@ import UserNotifications
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GeneratedPluginRegistrant.register(with: self)
-    if #available(iOS 10.0, *) {
-        UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
-    } else {
-        let settings: UIUserNotificationSettings =
-         UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-         application.registerUserNotificationSettings(settings)
-    }
     
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  if #available(iOS 10.0, *) {
+                    UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+        }
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-    
-    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 
-      super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
-    }
 }

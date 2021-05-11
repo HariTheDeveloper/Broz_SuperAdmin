@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:push_notification/main.dart';
@@ -9,6 +10,7 @@ class ShareTokenPage extends StatefulWidget {
 }
 
 class _ShareTokenPageState extends State<ShareTokenPage> {
+  FirebaseMessaging fcm = FirebaseMessaging.instance;
   String deviceToken;
   @override
   void initState() {
@@ -17,10 +19,11 @@ class _ShareTokenPageState extends State<ShareTokenPage> {
   }
 
   void initialize() {
-    MyHomePageState.fcm.getToken().then((value) {
+    fcm.getToken().then((value) {
       setState(() {
         deviceToken = value;
       });
+      print("deviceToken:$deviceToken");
     });
   }
 

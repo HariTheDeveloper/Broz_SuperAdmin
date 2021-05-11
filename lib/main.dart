@@ -1,18 +1,31 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:device_id/device_id.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:just_audio/just_audio.dart';
+
 
 import 'package:push_notification/Login/login/mobile_login.dart';
 import 'package:push_notification/Tabs/allservices_tab.dart';
 import 'package:push_notification/Utitlity/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
 
-void main() => runApp(new MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Set the background messaging handler early on, as a named top-level function
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  runApp(MyApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -47,32 +60,17 @@ class MyHomePageState extends State<MyHomePage>
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  static FirebaseMessaging fcm = FirebaseMessaging();
-
+  FirebaseMessaging fcm;
+  bool isFromBackgroundNotification = false;
   @override
   void initState() {
     super.initState();
 
     _loginSetup();
     initialize();
-    fcm.getToken().then((value) {
-      setState(() {
-        Constants.deviceToken = value;
-      });
-    });
   }
 
-  _playAlert() {
-    var player = AudioPlayer();
-    Future.delayed(Duration(milliseconds: 250), () async {
-      player.setAsset('assets/Alert_Android.mp3');
-      player.setLoopMode(LoopMode.all);
-      await player.play();
-    });
-    Future.delayed(Duration(seconds: 15), () async {
-      player.dispose();
-    });
-  }
+  
 
   _loginSetup() {
     loggedIn = _prefs.then((SharedPreferences prefs) {
@@ -108,44 +106,105 @@ class MyHomePageState extends State<MyHomePage>
     super.dispose();
   }
 
+  Future<void> firebaseConfig() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    fcm = FirebaseMessaging.instance;
+    _firebaseCloudMessagingListeners();
+  }
+
   Future initialize() async {
     Constants.deviceId = await DeviceId.getID;
     print(Constants.deviceId);
+    firebaseConfig();
+  }
 
-    var android = AndroidInitializationSettings('mipmap/ic_launcher');
-    var ios = IOSInitializationSettings();
-    var platform = InitializationSettings(android, ios);
-    flutterLocalNotificationsPlugin.initialize(platform,
-        onSelectNotification: selectNotification);
+  void _firebaseCloudMessagingListeners() {
+    if (Platform.isIOS) _iOSPermission();
 
-    if (Platform.isIOS) {
-      fcm.requestNotificationPermissions(IosNotificationSettings());
+    fcm.getToken().then((value) {
+      setState(() {
+        Constants.deviceToken = value;
+      });
+    });
+    var android = AndroidInitializationSettings('app_icon');
+    var ios = IOSInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false);
+    var platform = InitializationSettings(android: android, iOS: ios);
+    flutterLocalNotificationsPlugin.initialize(
+      platform,
+    );
+
+//*: Foreground Message
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      var remoteMessage = message.data;
+      RemoteNotification remoteNotification;
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        remoteNotification = message.notification;
+      }
+
+      if (Platform.isAndroid) {
+        //   var data = remoteMessage['body'];
+        // Map<String, dynamic> notification = json.decode(data);
+        _handleMessageForAndroid(remoteNotification);
+      } else {
+        _handleMessageForiOS(remoteNotification);
+      }
+    });
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      var remoteMessage = message.data;
+      //  _playAlert();
+      RemoteNotification remoteNotification;
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        remoteNotification = message.notification;
+      }
+      if (Platform.isAndroid) {
+        // var data = remoteMessage['body'];
+        // Map<String, dynamic> notification = json.decode(data);
+        isFromBackgroundNotification = true;
+        _handleMessageForAndroid(remoteNotification);
+      } else {
+        isFromBackgroundNotification = true;
+        _handleMessageForiOS(remoteNotification);
+      }
+    });
+  }
+
+  _iOSPermission() async {
+    NotificationSettings settings = await fcm.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
     }
+  }
 
-    fcm.configure(
-        onBackgroundMessage:
-            Platform.isAndroid ? fcmBackgroundMessageHandler : null,
-
-        //called when app is in foreground and we receive notifications
-        onMessage: (Map<String, dynamic> message) async {
-          print("on Message :$message");
-          if (Platform.isAndroid) {
-            showNotification(message["notification"]["title"],
-                message["notification"]["body"]);
-          } else {
-            showNotification(message["aps"]["alert"]["title"],
-                message["aps"]["alert"]["body"]);
-          }
-        },
-        //called when app is closed completely and opened when we receive notifications
-        onLaunch: (Map<String, dynamic> message) async {
-          print("on Launch :$message");
-          //_playAlert();
-        },
-        //called when app is in background and we receive notifications
-        onResume: (Map<String, dynamic> message) async {
-          //_playAlert();
-        });
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    // If you're going to use other Firebase services in the background, such as Firestore,
+    // make sure you call `initializeApp` before using other Firebase services.
+    await Firebase.initializeApp();
+    print('Handling a background message $message');
+    // _playAlert();
   }
 
   Future onDidReceiveLocalNotification(
@@ -169,7 +228,16 @@ class MyHomePageState extends State<MyHomePage>
     );
   }
 
-  showNotification(String title, String message) async {
+  _handleMessageForAndroid(RemoteNotification notification) {
+    _showNotification(notification.title, notification.body);
+  }
+
+  _handleMessageForiOS(RemoteNotification notification) {
+    _showNotification(notification.title, notification.body);
+    print(notification.title);
+  }
+
+  _showNotification(String title, String message) async {
     print("Message :$title");
 
     var android = AndroidNotificationDetails(
@@ -177,20 +245,27 @@ class MyHomePageState extends State<MyHomePage>
       "Broz_Admin",
       "Offer Notification",
       icon: "ic_launcher_",
-      sound: RawResourceAndroidNotificationSound('truckhorn'),
+      sound: RawResourceAndroidNotificationSound('alert.mp3'),
       playSound: true,
     );
     var iOS = IOSNotificationDetails(
-        presentAlert: true, presentSound: true, sound: 'truckHorn.wav');
-    var platform = NotificationDetails(android, iOS);
+        presentAlert: true, presentSound: true, sound: 'alert.wav');
+    var platform = NotificationDetails(android: android, iOS: iOS);
     await flutterLocalNotificationsPlugin.show(0, title, message, platform);
-    if (await Vibration.hasVibrator()) {
-      Vibration.vibrate(duration: 3000);
+    if (!isFromBackgroundNotification) {
+      // await flutterLocalNotificationsPlugin.show(0, title, message, platform);
+      // if (await Vibration.hasVibrator()) {
+      //   Vibration.vibrate(duration: 3000);
+      //   // _playAlert();
+      // }
+    } else {
+      isFromBackgroundNotification = false;
     }
   }
 
   static Future<dynamic> fcmBackgroundMessageHandler(
       Map<String, dynamic> message) {
+    print("Background Message");
     if (message.containsKey('notification')) {
       // Handle notification message
       final dynamic notification = message['notification'];
