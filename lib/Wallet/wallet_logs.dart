@@ -1,4 +1,5 @@
 import 'package:broz_admin/OrderDetail/order_detail_model.dart';
+import 'package:broz_admin/Utitlity/safe_area_container.dart';
 import 'package:broz_admin/Wallet/walet_logs_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _WalletLogsScreenState extends State<WalletLogsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _bodyWidgetWithAppbar();
+    return SafeAreaContainer(child: _bodyWidgetWithAppbar(),);
   }
 
   _bodyWidgetWithAppbar() {

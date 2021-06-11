@@ -1,5 +1,6 @@
 import 'package:broz_admin/Tabs/Employees/wallet_model.dart';
 import 'package:broz_admin/Tabs/Employees/wallet_recharge.dart';
+import 'package:broz_admin/Utitlity/safe_area_container.dart';
 import 'package:broz_admin/WebService/webservice.dart';
 import 'package:broz_admin/app_loader.dart';
 import 'package:flutter/material.dart';
@@ -66,71 +67,73 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
           backgroundColor: Colors.green,
         ),
         backgroundColor: Colors.white,
-        body: StreamBuilder(
-          stream: streamModel.stream,
-          builder: (BuildContext _context, AsyncSnapshot _snapshot) {
-            if (!_snapshot.hasData) {
-              return Center(
-                  child: CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Colors.green[300])));
-            } else if (_snapshot.data.length > 0) {
-              return RefreshIndicator(
-                color: Colors.black,
-                onRefresh: streamModel.refresh,
-                child: ListView.separated(
-                  // padding: EdgeInsets.symmetric(vertical: 8.0),
-                  controller: scrollController,
-                  separatorBuilder: (context, index) => Divider(),
-                  itemCount: _snapshot.data.length + 1,
-                  itemBuilder: (BuildContext _context, int index) {
-                    if (index < _snapshot.data.length) {
-                      return EmployeeCell(
-                        employeeJson: _snapshot.data[index],
-                        employeeToRecharge: (json) {
-                          editingController.clear();
-                          showReachargeWiget(
-                              editingController: editingController,
-                              key: _keyAlertDialog,
-                              mContext: context,
-                              recharged: (yes) {
-                                if (yes) {
-                                  print("Reacharge me");
-                                  _showAlert(json);
-                                }
-                              });
-                        },
-                      );
-                    } else if (streamModel.hasMore) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32.0),
-                        child: Center(
-                            child: CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(
-                                    Colors.green[300]))),
-                      );
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32.0),
-                        child: Align(
-                          child: _snapshot.data.length > 4
-                              ? Text('Nothing more to load !')
-                              : Container(),
-                          alignment: Alignment.center,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              );
-            } else {
-              return Center(
-                  child: Text(
-                'No data found !',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ));
-            }
-          },
+        body: SafeAreaContainer(
+                  child: StreamBuilder(
+            stream: streamModel.stream,
+            builder: (BuildContext _context, AsyncSnapshot _snapshot) {
+              if (!_snapshot.hasData) {
+                return Center(
+                    child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Colors.green[300])));
+              } else if (_snapshot.data.length > 0) {
+                return RefreshIndicator(
+                  color: Colors.black,
+                  onRefresh: streamModel.refresh,
+                  child: ListView.separated(
+                    // padding: EdgeInsets.symmetric(vertical: 8.0),
+                    controller: scrollController,
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: _snapshot.data.length + 1,
+                    itemBuilder: (BuildContext _context, int index) {
+                      if (index < _snapshot.data.length) {
+                        return EmployeeCell(
+                          employeeJson: _snapshot.data[index],
+                          employeeToRecharge: (json) {
+                            editingController.clear();
+                            showReachargeWiget(
+                                editingController: editingController,
+                                key: _keyAlertDialog,
+                                mContext: context,
+                                recharged: (yes) {
+                                  if (yes) {
+                                    print("Reacharge me");
+                                    _showAlert(json);
+                                  }
+                                });
+                          },
+                        );
+                      } else if (streamModel.hasMore) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 32.0),
+                          child: Center(
+                              child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Colors.green[300]))),
+                        );
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 32.0),
+                          child: Align(
+                            child: _snapshot.data.length > 4
+                                ? Text('Nothing more to load !')
+                                : Container(),
+                            alignment: Alignment.center,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+              } else {
+                return Center(
+                    child: Text(
+                  'No data found !',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ));
+              }
+            },
+          ),
         ));
   }
 
