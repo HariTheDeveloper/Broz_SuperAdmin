@@ -1,7 +1,12 @@
+import 'package:broz_admin/Tabs/Employees/wallet_model.dart';
+import 'package:broz_admin/Tabs/Employees/wallet_recharge.dart';
+import 'package:broz_admin/WebService/webservice.dart';
+import 'package:broz_admin/app_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:broz_admin/List/employeeCell.dart';
 import 'package:broz_admin/Tabs/Employees/employee_model.dart';
-import 'package:broz_admin/Utitlity/Constants.dart';
+import 'package:broz_admin/OrderDetail/order_detail_model.dart' as Model;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EmployeeWalletWidget extends StatefulWidget {
   const EmployeeWalletWidget({Key key}) : super(key: key);
@@ -13,6 +18,10 @@ class EmployeeWalletWidget extends StatefulWidget {
 class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   final scrollController = ScrollController();
   EmployeeStreamModel streamModel;
+  TextEditingController editingController = TextEditingController();
+  final GlobalKey<State> _keyAlertDialog = GlobalKey<State>();
+  final GlobalKey<State> _keyLoaderDialog = GlobalKey<State>();
+
   @override
   void initState() {
     streamModel = EmployeeStreamModel();
@@ -30,6 +39,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   @override
   void dispose() {
     scrollController.dispose();
+    editingController?.dispose();
     super.dispose();
   }
 
@@ -77,6 +87,19 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                     if (index < _snapshot.data.length) {
                       return EmployeeCell(
                         employeeJson: _snapshot.data[index],
+                        employeeToRecharge: (json) {
+                          editingController.clear();
+                          showReachargeWiget(
+                              editingController: editingController,
+                              key: _keyAlertDialog,
+                              mContext: context,
+                              recharged: (yes) {
+                                if (yes) {
+                                  print("Reacharge me");
+                                  _showAlert(json);
+                                }
+                              });
+                        },
                       );
                     } else if (streamModel.hasMore) {
                       return Padding(
@@ -110,4 +133,77 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
           },
         ));
   }
+
+  void addEmployeeWalletAmount(EmployeeJson json) {
+    showLoaderDialog(context, _keyLoaderDialog);
+    addNewUserWallet(Model.Resource(
+        url: 'http://user.brozapp.com/apiencrypt/addUserWallet',
+        request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
+          amount: editingController.text.trim(),
+          credit: 1,
+          transactionId: "adminAppRecharge",
+          userId: json.userId.toString(),
+          walletType: 4,
+        )))).then((value) {
+      closeLoaderDialog(_keyLoaderDialog);
+      switch (value.status) {
+        case 1:
+          ScaffoldMessenger.of(context).showSnackBar(
+              showToast("Wallet amount of ${json.name} updated successfully"));
+          setState(() {
+            streamModel.refresh();
+          });
+          break;
+        default:
+          ScaffoldMessenger.of(context)
+              .showSnackBar(showToast("${value.message}"));
+      }
+    }).catchError((onError) {
+      closeLoaderDialog(_keyLoaderDialog);
+      ScaffoldMessenger.of(context).showSnackBar(
+          showToast("Oops ! something went wrong. Please try again later"));
+    });
+  }
+
+  _showAlert(EmployeeJson json) {
+    Alert(
+      style: AlertStyle(
+        isCloseButton: false,
+      ),
+      context: context,
+      type: AlertType.none,
+      title: "Broz",
+      desc: "Are you sure you want to recharge ?",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Yes",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            addEmployeeWalletAmount(json);
+          },
+          color: Colors.green,
+        ),
+        DialogButton(
+          child: Text(
+            "No",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          color: Colors.black,
+        )
+      ],
+    ).show();
+  }
 }
+
+showToast(String msg) => SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.green,
+    );

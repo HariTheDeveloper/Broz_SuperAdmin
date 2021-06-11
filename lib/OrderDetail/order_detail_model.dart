@@ -57,21 +57,21 @@ Future<String> httpRequest(
   switch (requestType) {
     case RequestType.GET:
       final response = await http.get(
-        apiUrl,
+        Uri.parse(apiUrl),
         headers: _defaultApiHeaders,
       );
       print("Response : ${response.body}");
       return decryptResponse ? response.body.decrypt : response.body;
       break;
     case RequestType.PUT:
-      final response = await http.put(apiUrl,
+      final response = await http.put(Uri.parse(apiUrl),
           headers: _defaultApiHeaders,
           body: encrypt ? resource.request.encrypt : resource.request);
       print("Response : ${response.body}");
       return decryptResponse ? response.body.decrypt : response.body;
       break;
     default:
-      final response = await http.post(apiUrl,
+      final response = await http.post(Uri.parse(apiUrl),
           headers: _defaultApiHeaders,
           body: encrypt ? resource.request.encrypt : resource.request);
       print("Response : ${response.body}");

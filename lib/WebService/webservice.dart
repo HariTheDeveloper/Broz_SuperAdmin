@@ -19,7 +19,7 @@ class Resource<T> {
 
 Future<Login> loginDetails<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post((Uri.parse(resource.url)),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return loginFromJson(response.body);
@@ -28,7 +28,7 @@ Future<Login> loginDetails<T>(Resource<T> resource) async {
 Future<CheckPasswordResponse> passwordCheckDetails<T>(
     Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return checkPasswordFromJson(response.body);
@@ -36,7 +36,7 @@ Future<CheckPasswordResponse> passwordCheckDetails<T>(
 
 Future<OtpVerify> otpVerify<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return otpVerifyFromJson(response.body);
@@ -44,7 +44,7 @@ Future<OtpVerify> otpVerify<T>(Resource<T> resource) async {
 
 Future<SignupResponse> signupNew<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return signupFromJson(response.body);
@@ -52,7 +52,7 @@ Future<SignupResponse> signupNew<T>(Resource<T> resource) async {
 
 Future<ForgotPasswordResponse> forgotPassword<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return forgotpasswordFromJson(response.body);
@@ -60,7 +60,7 @@ Future<ForgotPasswordResponse> forgotPassword<T>(Resource<T> resource) async {
 
 Future<UpdateCustomerResponse> updateCustomer<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return updateCustomerFromJson(response.body);
@@ -68,7 +68,7 @@ Future<UpdateCustomerResponse> updateCustomer<T>(Resource<T> resource) async {
 
 Future<ForgotOtpResponse> forgotOtp<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return forgotOtpFromJson(response.body);
@@ -76,7 +76,7 @@ Future<ForgotOtpResponse> forgotOtp<T>(Resource<T> resource) async {
 
 Future<CheckPasswordResponse> passwordChange<T>(Resource<T> resource) async {
   print('request params ${resource.request} ** ${resource.url}');
-  final response = await http.post(resource.url,
+  final response = await http.post(Uri.parse(resource.url),
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return checkPasswordFromJson(response.body);

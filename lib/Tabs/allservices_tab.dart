@@ -152,7 +152,14 @@ class _AllServicesPageState extends State<AllServicesPage>
             leading: PopupMenuButton<String>(
               onSelected: handleClick,
               offset: Offset(5, 40),
-              icon: Icon(Icons.settings, size: 36),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  "assets/user-3.png",
+                  width: 35,
+                  height: 35,
+                ),
+              ),
               itemBuilder: (BuildContext context) {
                 return {
                   'Employees',

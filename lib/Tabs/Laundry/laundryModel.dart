@@ -15,16 +15,16 @@ var _defaultApiHeaders = {
 Future<List<OrderJson>> _getLaundryOrdersList(int withPage) async {
   // laundry.pasubot.com
 
-  final data =
-      await http.post("http://laundry.brozapp.com/api/past/appointment/list",
-          headers: _defaultApiHeaders,
-          body: jsonEncode(<String, dynamic>{
-            "pageSize": 10,
-            "pageNumber": withPage,
-            "clientId": Constants.userID,
-            'userType': Constants.userType,
-            'outletId': Constants.outletID
-          }));
+  final data = await http.post(
+      Uri.parse("http://laundry.brozapp.com/api/past/appointment/list"),
+      headers: _defaultApiHeaders,
+      body: jsonEncode(<String, dynamic>{
+        "pageSize": 10,
+        "pageNumber": withPage,
+        "clientId": Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
+      }));
   var params = jsonEncode(<String, dynamic>{
     "pageSize": 10,
     "pageNumber": withPage,

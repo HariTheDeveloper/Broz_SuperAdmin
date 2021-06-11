@@ -12,7 +12,7 @@ var _defaultApiHeaders = {
 };
 
 Future<List<CustomerLogs>> _getCustomersList(int withPage) async {
-  final data = await http.post("http://user.brozapp.com/api/userCallLogs",
+  final data = await http.post(Uri.parse("http://user.brozapp.com/api/userCallLogs"),
       headers: _defaultApiHeaders,
       body: jsonEncode(<String, dynamic>{
         'userType': Constants.userType,

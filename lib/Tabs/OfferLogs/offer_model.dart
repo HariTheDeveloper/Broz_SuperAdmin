@@ -13,7 +13,7 @@ var _defaultApiHeaders = {
 };
 
 Future<List<OffersJson>> _getOffersList(int withPage) async {
-  final data = await http.post("http://user.brozapp.com/api/offerSubscribeList",
+  final data = await http.post(Uri.parse("http://user.brozapp.com/api/offerSubscribeList"),
       headers: _defaultApiHeaders,
       body: jsonEncode(<String, dynamic>{
         "pageNumber": withPage,

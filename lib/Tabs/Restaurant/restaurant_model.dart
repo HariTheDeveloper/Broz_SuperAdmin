@@ -14,7 +14,7 @@ var _defaultApiHeaders = {
 
 Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
   final data =
-      await http.post("https://restaurant.brozapp.com/api/morderDetails",
+      await http.post(Uri.parse("https://restaurant.brozapp.com/api/morderDetails"),
           headers: _defaultApiHeaders,
           body: jsonEncode(<String, dynamic>{
             "pageNumber": withPage,

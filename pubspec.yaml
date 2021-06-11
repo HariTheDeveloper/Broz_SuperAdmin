@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_messaging: ^10.0.1
   firebase_core: ^1.0.3
-  http: ^0.12.0
+  http: ^0.13.0
   share: ^0.6.4+3
   flutter_local_notifications: ^5.0.0+1
   rxdart: ^0.26.0
@@ -40,11 +40,13 @@ dependencies:
   fluttertoast: ^7.1.5 
   device_id: ^0.2.0
   shared_preferences: ^2.0.5
-  flutter_svg: ^0.17.1
+  flutter_svg: ^0.22.0
   url_launcher: ^6.0.3
   rflutter_alert: ^1.0.3
   loading_overlay: ^0.2.1
   encrypt: ^5.0.0
+  shimmer: ^1.1.2 #To shimmer layout
+  cached_network_image: ^3.0.0 #To cache image locally
   
 
 dev_dependencies:

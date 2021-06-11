@@ -20,23 +20,24 @@ Future<List<EmployeeJson>> _getEmployeeList(int pageNumber) async {
     'userType': Constants.userType,
     'outletId': Constants.outletID
   });
-  print('request params $params ** https://brozgro.tk/getUserDetails ');
-  final data = await http.post("https://brozgro.tk/getUserDetails",
-      // headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        'pageNumber': pageNumber,
-        'pageSize': 10,
-        'userId': Constants.userID,
-        'userType': Constants.userType,
-        'outletId': Constants.outletID
-      }));
+  print('request params $params ** http://user.brozapp.com/api/UserDetails ');
+  final data =
+      await http.post(Uri.parse("http://user.brozapp.com/api/UserDetails"),
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            'pageNumber': pageNumber,
+            'pageSize': 10,
+            'userId': Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
 
-  var json = jsonDecode(data.body);
+  var json = await jsonDecode(data.body);
   print("API Response:$json");
-  if (json["status"] ?? 0 == 200) {
-    final Iterable orderDataList = json['employeeList'];
-    if (orderDataList.length > 0) {
-      return orderDataList.map((e) => EmployeeJson.fromJson(e)).toList();
+  if (json["status"] == 1) {
+    final Iterable employeeList = json['responseData'];
+    if (employeeList.length > 0) {
+      return employeeList.map((e) => EmployeeJson.fromJson(e)).toList();
     } else {
       return List<EmployeeJson>.empty(growable: true);
     }
@@ -48,6 +49,7 @@ class EmployeeStreamModel {
   Stream<List<EmployeeJson>> stream;
   bool hasMore;
   int pageNumber;
+  int totalCount;
   int pagelimit;
   bool isLoading;
   bool reachedBottom;
@@ -91,7 +93,7 @@ class EmployeeStreamModel {
       _data.addAll(postsData);
       pageNumber += 1;
       reachedBottom = false;
-      hasMore = (postsData.length > 0) || reachedBottom;
+      hasMore = (postsData.length >= 10) || reachedBottom;
       _controller.add(_data);
     });
   }

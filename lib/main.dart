@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:broz_admin/Login/login/mobile_login.dart';
 import 'package:broz_admin/Tabs/allservices_tab.dart';
@@ -68,8 +67,6 @@ class MyHomePageState extends State<MyHomePage>
     _loginSetup();
     initialize();
   }
-
-  
 
   _loginSetup() {
     loggedIn = _prefs.then((SharedPreferences prefs) {

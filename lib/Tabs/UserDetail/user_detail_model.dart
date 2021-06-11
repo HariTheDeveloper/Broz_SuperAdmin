@@ -13,7 +13,7 @@ var _defaultApiHeaders = {
 };
 
 Future<List<UsersLogs>> _getUserDetailsLogs(int withPage, int userID) async {
-  final data = await http.post("http://user.brozapp.com/api/userLogDetails",
+  final data = await http.post(Uri.parse("http://user.brozapp.com/api/userLogDetails"),
       headers: _defaultApiHeaders,
       body: jsonEncode(<String, dynamic>{
         "pageNumber": withPage,

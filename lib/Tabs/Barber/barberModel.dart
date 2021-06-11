@@ -15,7 +15,7 @@ var _defaultApiHeaders = {
 Future<List<OrderJson>> _getBarberOrdersList(int withPage) async {
   //barber.pasutech
   final data =
-      await http.post("http://barber.brozapp.com/api/past/appointment/list",
+      await http.post(Uri.parse("http://barber.brozapp.com/api/past/appointment/list"),
           headers: _defaultApiHeaders,
           body: jsonEncode(<String, dynamic>{
             "pageNumber": withPage,
