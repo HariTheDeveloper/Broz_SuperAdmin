@@ -68,7 +68,7 @@ class MyHomePageState extends State<MyHomePage>
     initialize();
   }
 
-  _loginSetup() {
+  _loginSetup() async {
     loggedIn = _prefs.then((SharedPreferences prefs) {
       return prefs.getBool("loginStatus") ?? false;
     });
@@ -84,16 +84,16 @@ class MyHomePageState extends State<MyHomePage>
       return prefs.getStringList("outletID") ?? ["0"];
     });
 
-    useriD.then((value) {
+    await useriD.then((value) {
       Constants.userID = value;
     });
-    userType.then((value) {
+    await userType.then((value) {
       Constants.userType = value;
     });
-    outletID.then((value) {
+    await outletID.then((value) {
       Constants.outletID = value;
     });
-    loggedIn.then((value) {
+    await loggedIn.then((value) {
       _moveScreens(value);
     });
   }

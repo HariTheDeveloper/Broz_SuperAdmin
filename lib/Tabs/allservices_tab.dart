@@ -149,45 +149,57 @@ class _AllServicesPageState extends State<AllServicesPage>
               "${title["title"]}",
               style: TextStyle(color: Colors.white),
             ),
-            leading: PopupMenuButton<String>(
-              onSelected: handleClick,
-              offset: Offset(5, 40),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "assets/user-3.png",
-                  width: 35,
-                  height: 35,
-                ),
-              ),
-              itemBuilder: (BuildContext context) {
-                return {
-                  'Employees',
-                  'Logout',
-                }.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Row(
-                      children: [
-                        Icon(
-                            choice == "Employees" ? Icons.person : Icons.logout,
-                            color: Colors.black,
-                            size: choice == "Employees" ? 20 : 20),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Text(
-                            choice,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
+            leading: Constants.userType != 0
+                ? IconButton(
+                    onPressed: () {
+                      _showAlert();
+                    },
+                    icon: Image.asset(
+                      "assets/user-3.png",
+                      width: 50,
+                      height: 50,
+                    ))
+                : PopupMenuButton<String>(
+                    onSelected: handleClick,
+                    offset: Offset(5, 40),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "assets/user-3.png",
+                        width: 35,
+                        height: 35,
+                      ),
                     ),
-                  );
-                }).toList();
-              },
-            ),
+                    itemBuilder: (BuildContext context) {
+                      return {
+                        'Employees',
+                        'Logout',
+                      }.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Row(
+                            children: [
+                              Icon(
+                                  choice == "Employees"
+                                      ? Icons.person
+                                      : Icons.logout,
+                                  color: Colors.black,
+                                  size: choice == "Employees" ? 20 : 20),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  choice,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
             actions: [
               InkWell(
                 onTap: () {
@@ -286,7 +298,7 @@ class _AllServicesPageState extends State<AllServicesPage>
 
   _clearDefaultsAndProceed() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool("loginStatus", false);
+    prefs.setBool('loginStatus', false);
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
   }
