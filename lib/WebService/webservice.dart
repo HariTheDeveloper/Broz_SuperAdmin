@@ -4,6 +4,7 @@ import 'package:broz_admin/Data/forgot_password_data.dart';
 import 'package:broz_admin/Data/login_data.dart';
 import 'package:broz_admin/Data/otpVerify_data.dart';
 import 'package:broz_admin/Data/password_check_data.dart';
+import 'package:broz_admin/Data/reset_password_data.dart';
 import 'package:broz_admin/Data/signup_data.dart';
 import 'package:broz_admin/Data/update_customer_data.dart';
 import 'package:http/http.dart' as http;
@@ -56,6 +57,14 @@ Future<ForgotPasswordResponse> forgotPassword<T>(Resource<T> resource) async {
       headers: _defaultApiHeaders, body: resource.request);
   print("Response body: ${response.body}");
   return forgotpasswordFromJson(response.body);
+}
+
+Future<ResetPasswordResponse> resetPassword<T>(Resource<T> resource) async {
+  print('request params ${resource.request} ** ${resource.url}');
+  final response = await http.post(Uri.parse(resource.url),
+      headers: _defaultApiHeaders, body: resource.request);
+  print("Response body: ${response.body}");
+  return resetPasswordFromJson(response.body);
 }
 
 Future<UpdateCustomerResponse> updateCustomer<T>(Resource<T> resource) async {

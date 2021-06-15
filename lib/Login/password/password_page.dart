@@ -1,3 +1,4 @@
+import 'package:broz_admin/Data/reset_password_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -75,56 +76,8 @@ class _PasswordPageState extends State<PasswordPage> {
                           )),
                     ),
                   ),
-                  /*
                   SizedBox(height: 20),
-                  Center(
-                    child: FlatButton(
-                        onPressed: () {
-                          Alert(
-                            style: AlertStyle(
-                              isCloseButton: false,
-                            ),
-                            context: context,
-                            type: AlertType.none,
-                            title: "Forgot Password?",
-                            desc:
-                                'To update new password, please confirm this number ${widget.logindetail.countryCode} - ${widget.logindetail.phoneNumber} to send otp',
-                            buttons: [
-                              DialogButton(
-                                child: Text(
-                                  "Proceed",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  forgotPasswordApi();
-                                },
-                                color: Colors.green,
-                              ),
-                              DialogButton(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                                gradient: LinearGradient(colors: [
-                                  Color.fromRGBO(116, 116, 191, 1.0),
-                                  Color.fromRGBO(52, 138, 199, 1.0)
-                                ]),
-                              )
-                            ],
-                          ).show();
-                        },
-                        child: Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                              color: Colors.lightGreen,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )),
-                  ),*/
+                  _resetPasswordWidget(),
                   Center(
                     child: Container(
                       padding: EdgeInsets.all(20),
@@ -196,6 +149,56 @@ class _PasswordPageState extends State<PasswordPage> {
         ));
   }
 
+  _resetPasswordWidget() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+          onPressed: () {
+            Alert(
+              style: AlertStyle(
+                isCloseButton: false,
+              ),
+              context: context,
+              type: AlertType.none,
+              title: "Reset Password!",
+              desc:
+                  'To reset your password, please confirm this number ${widget.logindetail.countryCode ?? ""} - ${widget.logindetail.phoneNumber} to send otp.',
+              buttons: [
+                DialogButton(
+                  child: Text(
+                    "Proceed",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  color: Colors.green,
+                ),
+                DialogButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  gradient: LinearGradient(colors: [
+                    Color.fromRGBO(116, 116, 191, 1.0),
+                    Color.fromRGBO(52, 138, 199, 1.0)
+                  ]),
+                )
+              ],
+            ).show();
+          },
+          child: Text(
+            "Reset Password",
+            style: TextStyle(
+                decoration: TextDecoration.underline,
+                color: Colors.green,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          )),
+    );
+  }
+
   void forgotPasswordApi() {
     showLoaderDialog(context, _keyAlertDialog);
     forgotPassword(Resource(
@@ -244,6 +247,51 @@ class _PasswordPageState extends State<PasswordPage> {
         ).show();
       }
     });
+  }
+
+  void resetPasswordApi() {
+    showLoaderDialog(context, _keyAlertDialog);
+    forgotPassword(Resource(
+      url: '${BaseUrl}resetPassword',
+      request: resetPasswordRequestToJson(
+        ResetPasswordRequest(
+          phoneNumber: widget.logindetail.phoneNumber,
+          language: "en",
+          countryCode: widget.logindetail.countryCode,
+          deviceType: "3",
+        ),
+      ),
+    )).then((value) {
+      closeLoaderDialog(_keyAlertDialog);
+      _showAlert(value.message);
+    }).catchError((onError) {
+      closeLoaderDialog(_keyAlertDialog);
+      _showAlert("Oops! something went wrong");
+    });
+  }
+
+  _showAlert(String msg) {
+    Alert(
+      style: AlertStyle(
+        isCloseButton: false,
+      ),
+      context: context,
+      type: AlertType.none,
+      title: "Broz",
+      desc: msg,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Okay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: Colors.green,
+        ),
+      ],
+    ).show();
   }
 
   void checkPasswordApi() {
