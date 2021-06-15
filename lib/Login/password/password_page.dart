@@ -171,6 +171,7 @@ class _PasswordPageState extends State<PasswordPage> {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
+                    resetPasswordApi();
                   },
                   color: Colors.green,
                 ),
