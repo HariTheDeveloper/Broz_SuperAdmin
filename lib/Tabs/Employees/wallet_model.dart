@@ -8,11 +8,15 @@ class AddNewUserWalletRequest {
   int walletType;
   String transactionId;
   int credit;
+  String description;
+  String managerNumber;
 
   AddNewUserWalletRequest(
       {this.userId,
       this.amount,
       this.walletType,
+      this.description,
+      this.managerNumber,
       this.transactionId,
       this.credit});
 
@@ -20,6 +24,8 @@ class AddNewUserWalletRequest {
     userId = json['userId'];
     amount = json['amount'];
     walletType = json['walletType'];
+    managerNumber = json['managerNumber'];
+    description = json['description'];
     transactionId = json['transactionId'];
     credit = json['credit'];
   }
@@ -29,13 +35,13 @@ class AddNewUserWalletRequest {
     data['userId'] = this.userId;
     data['amount'] = this.amount;
     data['walletType'] = this.walletType;
+    data['managerNumber'] = this.managerNumber;
+    data['description'] = this.description;
     data['transactionId'] = this.transactionId;
     data['credit'] = this.credit;
     return data;
   }
 }
-
-
 
 class AddNewUserWalletResponse {
   int httpCode;

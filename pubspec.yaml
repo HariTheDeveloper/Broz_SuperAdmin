@@ -47,6 +47,7 @@ dependencies:
   encrypt: ^5.0.0
   shimmer: ^1.1.2 #To shimmer layout
   cached_network_image: ^3.0.0 #To cache image locally
+  keyboard_actions: ^3.4.0 #To show done button in iOS Keyboards
   
 
 dev_dependencies:

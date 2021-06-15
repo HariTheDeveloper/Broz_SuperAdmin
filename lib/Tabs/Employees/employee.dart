@@ -1,12 +1,13 @@
 import 'package:broz_admin/Tabs/Employees/wallet_model.dart';
 import 'package:broz_admin/Tabs/Employees/wallet_recharge.dart';
 import 'package:broz_admin/Utitlity/safe_area_container.dart';
-import 'package:broz_admin/WebService/webservice.dart';
 import 'package:broz_admin/app_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:broz_admin/List/employeeCell.dart';
 import 'package:broz_admin/Tabs/Employees/employee_model.dart';
 import 'package:broz_admin/OrderDetail/order_detail_model.dart' as Model;
+import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:keyboard_actions/keyboard_actions_config.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EmployeeWalletWidget extends StatefulWidget {
@@ -19,14 +20,26 @@ class EmployeeWalletWidget extends StatefulWidget {
 class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   final scrollController = ScrollController();
   EmployeeStreamModel streamModel;
-  TextEditingController editingController = TextEditingController();
+  TextEditingController walletController = TextEditingController();
   final GlobalKey<State> _keyAlertDialog = GlobalKey<State>();
   final GlobalKey<State> _keyLoaderDialog = GlobalKey<State>();
+  final FocusNode _nodeText = FocusNode();
+  int credit = 1;
+  bool isLoading = true;
+  TextEditingController commentsController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     streamModel = EmployeeStreamModel();
-
+    streamModel.stream.listen((data) {
+      if (data.length > 0) {
+        if (mounted)
+          setState(() {
+            isLoading = false;
+          });
+      }
+    });
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -40,8 +53,75 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   @override
   void dispose() {
     scrollController.dispose();
-    editingController?.dispose();
+    walletController?.dispose();
     super.dispose();
+  }
+
+  /// Creates the [KeyboardActionsConfig] to hook up the fields
+  /// and their focus nodes to our [FormKeyboardActions].
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(
+            focusNode: _nodeText,
+            displayDoneButton: true,
+            displayArrows: false),
+      ],
+    );
+  }
+
+  Widget bottomAppBar() {
+    return isLoading
+        ? PreferredSize(
+            preferredSize: Size.fromHeight(0.0),
+            child: SizedBox.shrink(),
+          )
+        : PreferredSize(
+            child: Container(
+              color: Colors.green,
+              child: _searchBarWidget(),
+            ),
+            preferredSize: Size.fromHeight(40.0));
+  }
+
+  _searchBarWidget() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 0, left: 15, right: 15, bottom: 5),
+        child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(5))),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 22,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Search Employees",
+                        hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      )),
+                )
+              ],
+            )));
   }
 
   @override
@@ -52,6 +132,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
             "Employee List",
             style: TextStyle(color: Colors.white),
           ),
+          bottom: bottomAppBar(),
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -68,7 +149,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
         ),
         backgroundColor: Colors.white,
         body: SafeAreaContainer(
-                  child: StreamBuilder(
+          child: StreamBuilder(
             stream: streamModel.stream,
             builder: (BuildContext _context, AsyncSnapshot _snapshot) {
               if (!_snapshot.hasData) {
@@ -90,14 +171,17 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                         return EmployeeCell(
                           employeeJson: _snapshot.data[index],
                           employeeToRecharge: (json) {
-                            editingController.clear();
+                            walletController.clear();
                             showReachargeWiget(
-                                editingController: editingController,
+                                walletController: walletController,
                                 key: _keyAlertDialog,
                                 mContext: context,
-                                recharged: (yes) {
-                                  if (yes) {
+                                keyboardConfig: _buildConfig(context),
+                                nodeText: _nodeText,
+                                recharged: (recharge, debit) {
+                                  if (recharge) {
                                     print("Reacharge me");
+                                    credit = debit;
                                     _showAlert(json);
                                   }
                                 });
@@ -142,8 +226,9 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
     addNewUserWallet(Model.Resource(
         url: 'http://user.brozapp.com/apiencrypt/addUserWallet',
         request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
-          amount: editingController.text.trim(),
-          credit: 1,
+          amount: walletController.text.trim(),
+          credit: credit,
+          description: commentsController.text.trim(),
           transactionId: "adminAppRecharge",
           userId: json.userId.toString(),
           walletType: 4,
