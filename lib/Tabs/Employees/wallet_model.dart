@@ -24,7 +24,7 @@ class AddNewUserWalletRequest {
     userId = json['userId'];
     amount = json['amount'];
     walletType = json['walletType'];
-    managerNumber = json['managerNumber'];
+    managerNumber = json['managerNumber'] ?? "";
     description = json['description'];
     transactionId = json['transactionId'];
     credit = json['credit'];

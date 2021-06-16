@@ -17,15 +17,13 @@ class WalletLogsScreen extends StatefulWidget {
 
 class _WalletLogsScreenState extends State<WalletLogsScreen> {
   Future<NewUserWalletResponse> _userWalletResponse;
-  final _keyAlertDialog = GlobalKey<ScaffoldState>();
   bool _isLoading = false;
   int _pageNumber = 1;
   int _pageSize = 20;
   List<WalletHistory> _walletHistiry;
   bool _shouldAddList = false;
-  int _selectedOfferIndex = 0;
+
   bool isRTL = false;
-  final GlobalKey<State> _keyLoaderDialog = GlobalKey<State>();
   @override
   void initState() {
     _getUserWallet();
@@ -267,6 +265,24 @@ class _WalletLogsScreenState extends State<WalletLogsScreen> {
                   ),
                   child: Column(
                     children: [
+                      walletData.walletType == 5 &&
+                              walletData.managerNumber.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                        "Manager Number : ${walletData.managerNumber}",
+                                        style: TextStyle(
+                                            color: kWalletLightTextColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox.shrink(),
                       Row(
                         children: [
                           Padding(

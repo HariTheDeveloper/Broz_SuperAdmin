@@ -297,9 +297,9 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
           request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
             amount: '${double.tryParse(walletController.text.trim()) ?? 0}',
             credit: credit,
-            managerNumber: managerNumber, //NTC
+            managerNumber: managerNumber, 
             description: commentsController.text.trim(),
-            transactionId: "adminAppRecharge",
+            transactionId: "adminAppRecharge", //NTC
             userId: json.userId.toString(),
             walletType: 5,
           )))).then((value) {

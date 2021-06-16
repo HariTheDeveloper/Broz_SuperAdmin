@@ -129,6 +129,7 @@ class WalletHistory {
   String outletImage;
   int serviceType;
   int walletId;
+  String managerNumber;
 
   WalletHistory(
       {this.id,
@@ -139,6 +140,7 @@ class WalletHistory {
       this.debit,
       this.serviceType,
       this.walletId,
+      this.managerNumber,
       this.description,
       this.outletImage});
 
@@ -149,6 +151,7 @@ class WalletHistory {
     date = json['date'];
     credit = json['credit'];
     debit = json['debit'];
+    managerNumber = json['managerNumber'].toString() ?? "";
     description = json['description'];
     outletImage = json['outletImage'];
     serviceType = json['serviceType'];
@@ -167,6 +170,7 @@ class WalletHistory {
     data['outletImage'] = this.outletImage;
     data['serviceType'] = this.serviceType;
     data['walletId'] = this.walletId;
+    data['managerNumber'] = this.managerNumber;
     return data;
   }
 }
