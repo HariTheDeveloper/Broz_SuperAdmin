@@ -28,6 +28,7 @@ Future<void> showReachargeWiget({
             resizeToAvoidBottomInset: false,
             bottomNavigationBar: _submitWidget(
                 isDebit: isDebit,
+                mcontext: context,
                 recharged: (yes) {
                   recharged(yes, isDebit ?? false ? 0 : 1);
                 },
@@ -41,11 +42,9 @@ Future<void> showReachargeWiget({
                   top: true,
                   bottom: true,
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      top: isIphoneXorNot(context)
-                          ? MediaQuery.of(context).padding.top + 30
-                          : MediaQuery.of(context).padding.top + 16,
-                    ),
+                    padding: EdgeInsets.fromLTRB(8, isIphoneXorNot(context)
+                          ? MediaQuery.of(context).padding.top + 50
+                          : MediaQuery.of(context).padding.top + 16, 8, 12),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -280,9 +279,10 @@ _submitWidget(
     {Function(bool) recharged,
     TextEditingController walletController,
     TextEditingController commentsController,
+    BuildContext mcontext,
     bool isDebit}) {
   return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.fromLTRB(12, 12, 12, isIphoneXorNot(mcontext) ? 35 : 12),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.green),
         onPressed: () {
