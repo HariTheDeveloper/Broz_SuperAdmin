@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:broz_admin/Tabs/Employees/wallet_model.dart';
 import 'package:broz_admin/Tabs/Employees/wallet_recharge.dart';
 import 'package:broz_admin/Utitlity/safe_area_container.dart';
@@ -20,23 +22,30 @@ class EmployeeWalletWidget extends StatefulWidget {
 class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   final scrollController = ScrollController();
   EmployeeStreamModel streamModel;
+  SearchEmployeeStreamModel searchStreamModel;
   TextEditingController walletController = TextEditingController();
   final GlobalKey<State> _keyAlertDialog = GlobalKey<State>();
   final GlobalKey<State> _keyLoaderDialog = GlobalKey<State>();
   final FocusNode _nodeText = FocusNode();
   int credit = 1;
   bool isLoading = true;
+  bool isSearchData = false;
+  bool showLinearLoader = false;
+  Timer _searchOnStoppedTyping;
+  bool _showClear = false;
+  
   TextEditingController commentsController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
-    streamModel = EmployeeStreamModel();
-    streamModel.stream.listen((data) {
+    searchStreamModel = SearchEmployeeStreamModel();
+    searchStreamModel.stream.listen((data) {
       if (data.length > 0) {
         if (mounted)
           setState(() {
             isLoading = false;
+            showLinearLoader = false;
           });
       }
     });
@@ -44,7 +53,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
         print("Bottom reached");
-        streamModel.loadMore(reachesBottom: true);
+        searchStreamModel.loadMore(reachesBottom: true);
       }
     });
     super.initState();
@@ -83,9 +92,42 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
         : PreferredSize(
             child: Container(
               color: Colors.green,
-              child: _searchBarWidget(),
+              child: Column(children: [_searchBarWidget(),
+              PreferredSize(
+                child: showLinearLoader
+                    ? Container(
+                        height: showLinearLoader ? 2 : 0,
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.grey,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                preferredSize: Size.fromHeight(showLinearLoader ? 2.0 : 0.0)),
+              ],)
+              
             ),
-            preferredSize: Size.fromHeight(40.0));
+            preferredSize: Size.fromHeight(45.0));
+  }
+
+  onSearchTextChanged(String text) async {
+      setState(() {
+        _showClear = true;
+        showLinearLoader = true;
+      });
+  
+  
+      const duration = Duration(
+          milliseconds:
+              800); // set the duration that you want call search() after that.
+      if (_searchOnStoppedTyping != null) _searchOnStoppedTyping.cancel();
+      setState(() => _searchOnStoppedTyping = new Timer(duration, () {
+            searchStreamModel.searchData = text;
+            searchStreamModel.refresh();
+
+          }));
+    
   }
 
   _searchBarWidget() {
@@ -112,6 +154,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                 Expanded(
                   child: TextField(
                       controller: _searchController,
+                      onChanged: onSearchTextChanged,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Search Employees",
@@ -120,7 +163,26 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
                       )),
-                )
+                ),
+                _showClear
+                    ? InkWell(
+                        onTap: () {
+                          _searchController.clear();
+                          onSearchTextChanged('');
+                          setState(() {
+                            _showClear = false;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.clear,
+                            size: 22,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             )));
   }
@@ -151,7 +213,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
         backgroundColor: Colors.white,
         body: SafeAreaContainer(
           child: StreamBuilder(
-            stream: streamModel.stream,
+            stream: searchStreamModel.stream,
             builder: (BuildContext _context, AsyncSnapshot _snapshot) {
               if (!_snapshot.hasData) {
                 return Center(
@@ -161,7 +223,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
               } else if (_snapshot.data.length > 0) {
                 return RefreshIndicator(
                   color: Colors.black,
-                  onRefresh: streamModel.refresh,
+                  onRefresh: searchStreamModel.refresh,
                   child: ListView.separated(
                     // padding: EdgeInsets.symmetric(vertical: 8.0),
                     controller: scrollController,
@@ -191,7 +253,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                                 });
                           },
                         );
-                      } else if (streamModel.hasMore) {
+                      } else if (searchStreamModel.hasMore) {
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 32.0),
                           child: Center(
