@@ -97,7 +97,9 @@ class PasswordDetails {
           lastName: json['lastName'],
           userOtp: json['userOtp'],
           userType: json['userType'],
-          outletId: outletId.map((el) => el.toString()).toList(),
+          outletId: outletId != null
+              ? outletId.map((el) => el.toString()).toList()
+              : null,
           userAddress: addressList != null
               ? addressList.map((e) => UserAddress.fromJson(e)).toList()
               : null);
@@ -105,16 +107,6 @@ class PasswordDetails {
       return null;
   }
 
-  Map<String, dynamic> toJson() => {
-        'userId': userId,
-        'countryCode': countryCode,
-        'phoneNumber': phoneNumber,
-        'token': token,
-        'userEmail': userEmail,
-        'userName': userName,
-        'firstName': firstName,
-        'lastName': lastName
-      };
 }
 
 class UserAddress {

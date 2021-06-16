@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:broz_admin/Login/password/password_page.dart';
 import 'package:broz_admin/Tabs/Employees/wallet_model.dart';
 import 'package:broz_admin/Tabs/Employees/wallet_recharge.dart';
 import 'package:broz_admin/Utitlity/safe_area_container.dart';
@@ -21,7 +22,6 @@ class EmployeeWalletWidget extends StatefulWidget {
 
 class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   final scrollController = ScrollController();
-  EmployeeStreamModel streamModel;
   SearchEmployeeStreamModel searchStreamModel;
   TextEditingController walletController = TextEditingController();
   final GlobalKey<State> _keyAlertDialog = GlobalKey<State>();
@@ -33,7 +33,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   bool showLinearLoader = false;
   Timer _searchOnStoppedTyping;
   bool _showClear = false;
-  
+
   TextEditingController commentsController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
 
@@ -41,13 +41,11 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   void initState() {
     searchStreamModel = SearchEmployeeStreamModel();
     searchStreamModel.stream.listen((data) {
-      if (data.length > 0) {
-        if (mounted)
-          setState(() {
-            isLoading = false;
-            showLinearLoader = false;
-          });
-      }
+      if (mounted)
+        setState(() {
+          isLoading = false;
+          showLinearLoader = false;
+        });
     });
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
@@ -91,43 +89,47 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
           )
         : PreferredSize(
             child: Container(
-              color: Colors.green,
-              child: Column(children: [_searchBarWidget(),
-              PreferredSize(
-                child: showLinearLoader
-                    ? Container(
-                        height: showLinearLoader ? 2 : 0,
-                        child: LinearProgressIndicator(
-                          backgroundColor: Colors.grey,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                preferredSize: Size.fromHeight(showLinearLoader ? 2.0 : 0.0)),
-              ],)
-              
-            ),
+                color: Colors.green,
+                child: Column(
+                  children: [
+                    _searchBarWidget(),
+                    PreferredSize(
+                        child: showLinearLoader
+                            ? Container(
+                                height: showLinearLoader ? 2 : 0,
+                                child: LinearProgressIndicator(
+                                  backgroundColor: Colors.grey,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        preferredSize:
+                            Size.fromHeight(showLinearLoader ? 2.0 : 0.0)),
+                  ],
+                )),
             preferredSize: Size.fromHeight(45.0));
   }
 
   onSearchTextChanged(String text) async {
-      setState(() {
-        _showClear = true;
-        showLinearLoader = true;
-      });
-  
-  
-      const duration = Duration(
-          milliseconds:
-              800); // set the duration that you want call search() after that.
-      if (_searchOnStoppedTyping != null) _searchOnStoppedTyping.cancel();
-      setState(() => _searchOnStoppedTyping = new Timer(duration, () {
-            searchStreamModel.searchData = text;
-            searchStreamModel.refresh();
+    setState(() {
+      _showClear = true;
+      showLinearLoader = true;
+    });
 
-          }));
-    
+    const duration = Duration(
+        milliseconds:
+            800); // set the duration that you want call search() after that.
+    if (_searchOnStoppedTyping != null) _searchOnStoppedTyping.cancel();
+    setState(() => _searchOnStoppedTyping = new Timer(duration, () {
+          searchStreamModel.searchData = text;
+          if (scrollController.hasClients) {
+            scrollController.animateTo(0,
+                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          }
+
+          searchStreamModel.refresh();
+        }));
   }
 
   _searchBarWidget() {
@@ -289,37 +291,38 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
 
   void addEmployeeWalletAmount(EmployeeJson json) {
     showLoaderDialog(context, _keyLoaderDialog);
-
-    addNewUserWallet(Model.Resource(
-        url: 'http://brozusr.tk/api/editUserWallet',
-        request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
-          amount: '${double.tryParse(walletController.text.trim()) ?? 0}',
-          credit: credit,
-          managerNumber: "8220520948", //NTC
-          description: commentsController.text.trim(),
-          transactionId: "adminAppRecharge",
-          userId: json.userId.toString(),
-          walletType: 5,
-        )))).then((value) {
-      closeLoaderDialog(_keyLoaderDialog);
-      switch (value.status) {
-        case 1:
-          ScaffoldMessenger.of(context).showSnackBar(
-              showToast("Wallet amount of ${json.name} updated successfully"));
-          setState(() {
-            streamModel.refresh();
-            scrollController.animateTo(0,
-                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-          });
-          break;
-        default:
-          ScaffoldMessenger.of(context)
-              .showSnackBar(showToast("${value.message}"));
-      }
-    }).catchError((onError) {
-      closeLoaderDialog(_keyLoaderDialog);
-      ScaffoldMessenger.of(context).showSnackBar(
-          showToast("Oops ! something went wrong. Please try again later"));
+    getString(kUserLoginInfo).then((managerNumber) {
+      addNewUserWallet(Model.Resource(
+          url: 'http://user.brozapp.com/api/editUserWallet',
+          request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
+            amount: '${double.tryParse(walletController.text.trim()) ?? 0}',
+            credit: credit,
+            managerNumber: managerNumber, //NTC
+            description: commentsController.text.trim(),
+            transactionId: "adminAppRecharge",
+            userId: json.userId.toString(),
+            walletType: 5,
+          )))).then((value) {
+        closeLoaderDialog(_keyLoaderDialog);
+        switch (value.status) {
+          case 1:
+            ScaffoldMessenger.of(context).showSnackBar(showToast(
+                "Wallet amount of ${json.name} updated successfully"));
+            setState(() {
+              searchStreamModel.refresh();
+              scrollController.animateTo(0,
+                  duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            });
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(showToast("${value.message}"));
+        }
+      }).catchError((onError) {
+        closeLoaderDialog(_keyLoaderDialog);
+        ScaffoldMessenger.of(context).showSnackBar(
+            showToast("Oops ! something went wrong. Please try again later"));
+      });
     });
   }
 

@@ -300,7 +300,7 @@ class _AllServicesPageState extends State<AllServicesPage>
   _clearDefaultsAndProceed() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatus', false);
-    setUserLoginInfo("");
+    setString(kUserLoginInfo, "");
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
   }

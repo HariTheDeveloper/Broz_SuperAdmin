@@ -37,7 +37,7 @@ class _WalletLogsScreenState extends State<WalletLogsScreen> {
     _shouldAddList = true;
     _userWalletResponse = newUserWallet(
       Resource(
-        url: 'http://brozusr.tk/apiencrypt/newUserWallet',
+        url: 'http://user.brozapp.com/apiencrypt/newUserWallet',
         request: newUserWalletRequestToJson(
           NewUserWalletRequest(
               pageNumber: '$_pageNumber',

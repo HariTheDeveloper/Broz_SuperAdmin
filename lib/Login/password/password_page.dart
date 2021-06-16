@@ -317,7 +317,7 @@ class _PasswordPageState extends State<PasswordPage> {
       closeLoaderDialog(_keyAlertDialog);
       if (value.status == 1) {
         print("Value: ${value.details.outletId}");
-        setUserLoginInfo(json.encode(value.details));
+        setString(kUserLoginInfo, widget.logindetail.phoneNumber);
         moveToAllServices(value.details.userId, value.details.userType,
             value.details.outletId);
       } else {
@@ -367,6 +367,11 @@ class _PasswordPageState extends State<PasswordPage> {
 }
 
 const kUserLoginInfo = 'user_login_info';
+// put string
+void setString(String key, String value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(key, value);
+}
 // get string
 getString(String key, {String defValue = ''}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -375,22 +380,4 @@ getString(String key, {String defValue = ''}) async {
   return value;
 }
 
-//put userLoginInfo
-void setUserLoginInfo(String value) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString(kUserLoginInfo, value);
-}
 
-//get UserLoginInfo
-Future<PasswordDetails> getUserLoginInfo() async {
-  PasswordDetails loginInfoData;
-  final loginInfo = await getString(kUserLoginInfo) ?? "";
-  if (loginInfo != "") {
-    var data = json.decode(loginInfo);
-    loginInfoData = PasswordDetails.fromJson(data);
-  } else {
-    loginInfoData = PasswordDetails();
-  }
-
-  return loginInfoData;
-}

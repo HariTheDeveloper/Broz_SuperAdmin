@@ -54,16 +54,19 @@ Future<void> showReachargeWiget({
                           _headerWidget(mContext),
                           _walletAmountWidget(mContext, walletController,
                               keyboardConfig, nodeText, (amount) {
-                            if (amount.isNotEmpty)
-                              setState(() {
-                                isDebit = false;
-                              });
+                            // if (amount.isNotEmpty)
+                            //   setState(() {
+                            //     isDebit = false;
+                            //   });
                           }),
-                          _debitWidget(isDebit, setState, (onchanged) {
-                            setState(() {
-                              isDebit = onchanged;
-                            });
-                          }, walletController),
+                          // _debitWidget(isDebit, setState, (onchanged) {
+                          //   setState(() {
+                          //     isDebit = onchanged;
+                          //   });
+                          // }, walletController),
+                          SizedBox(
+                            height: 8,
+                          ),
                           _descriptionWidget(mContext, commentsController)
                         ],
                       ),
@@ -152,8 +155,8 @@ _walletAmountWidget(
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      decoration:
-                          InputDecoration(hintText: "Enter amount here"),
+                      decoration: InputDecoration(
+                          hintText: "Enter amount for recharge"),
                     )
                   : KeyboardActions(
                       config: keyboardConfig,
@@ -171,8 +174,11 @@ _walletAmountWidget(
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.digitsOnly
                         ],
-                        decoration:
-                            InputDecoration(hintText: "Enter amount here"),
+                        decoration: InputDecoration(
+                            hintText: "Enter amount for recharge",
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            )),
                       ),
                     ),
             ),
@@ -218,62 +224,65 @@ _debitWidget(bool isDebit, StateSetter setState, Function(bool) onChanged,
 
 _descriptionWidget(
     BuildContext mcontext, TextEditingController commentsController) {
-  return Padding(
+  return IntrinsicHeight(
+    child: Padding(
       padding: const EdgeInsets.all(8.0),
-      child: IntrinsicHeight(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              width: 100,
-              child: Text(
-                "Comments",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: 100,
+            child: Text(
+              "Comments",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          Text(
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Text(
             ":",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(8, 16, 8, 16),
-              child: Container(
-                height: 200,
-                child: Theme(
-                  data: Theme.of(mcontext).copyWith(primaryColor: Colors.black),
-                  child: TextField(
-                    controller: commentsController,
-                    cursorColor: Colors.black,
-                    textInputAction: TextInputAction.done,
-                    maxLength: 200,
-                    maxLines: 5,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      hintText: "Write your comments",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+            child: Container(
+              child: Theme(
+                data: Theme.of(mcontext).copyWith(primaryColor: Colors.black),
+                child: TextField(
+                  controller: commentsController,
+                  cursorColor: Colors.black,
+                  textInputAction: TextInputAction.done,
+                  maxLength: 200,
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    hintText: "Write your comments",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
                     ),
-                    onTap: () {},
-                    onSubmitted: (value) {},
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
                   ),
+                  onTap: () {},
+                  onSubmitted: (value) {},
                 ),
               ),
             ),
           ),
-        ]),
-      ));
+        ),
+      ]),
+    ),
+  );
 }
 
 _submitWidget(
@@ -286,13 +295,13 @@ _submitWidget(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.green),
         onPressed: () {
-          if (isDebit) {
-            if ((commentsController.text.isNotEmpty)) recharged(true);
-          } else {
-            if (walletController.text.isNotEmpty &&
-                (double.tryParse(walletController.text ?? "0") > 0) &&
-                (commentsController.text.isNotEmpty)) recharged(true);
-          }
+          // if (isDebit) {
+          //   if ((commentsController.text.isNotEmpty)) recharged(true);
+          // } else {
+          if (walletController.text.isNotEmpty &&
+              (double.tryParse(walletController.text ?? "0") >= 0) &&
+              (commentsController.text.isNotEmpty)) recharged(true);
+          // }
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
