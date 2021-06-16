@@ -20,17 +20,16 @@ Future<List<EmployeeJson>> _getEmployeeList(int pageNumber) async {
     'userType': Constants.userType,
     'outletId': Constants.outletID
   });
-  print('request params $params ** http://user.brozapp.com/api/UserDetails ');
-  final data =
-      await http.post(Uri.parse("http://user.brozapp.com/api/UserDetails"),
-          headers: _defaultApiHeaders,
-          body: jsonEncode(<String, dynamic>{
-            'pageNumber': pageNumber,
-            'pageSize': 10,
-            'userId': Constants.userID,
-            'userType': Constants.userType,
-            'outletId': Constants.outletID
-          }));
+  print('request params $params ** http://brozusr.tk/api/UserDetails ');
+  final data = await http.post(Uri.parse("http://brozusr.tk/api/UserDetails"),
+      headers: _defaultApiHeaders,
+      body: jsonEncode(<String, dynamic>{
+        'pageNumber': pageNumber,
+        'pageSize': 10,
+        'userId': Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
+      }));
 
   var json = await jsonDecode(data.body);
   print("API Response:$json");

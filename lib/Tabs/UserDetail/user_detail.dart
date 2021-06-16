@@ -19,6 +19,7 @@ class _UserLogDetailsState extends State<UserLogDetails> {
   void initState() {
     streamModel = UserDetailsStreamModel();
     streamModel.userID = widget.userID;
+    
     streamModel.loadMore(reachesBottom: true);
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==

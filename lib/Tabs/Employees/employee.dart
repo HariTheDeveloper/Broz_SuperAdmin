@@ -54,6 +54,7 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
   void dispose() {
     scrollController.dispose();
     walletController?.dispose();
+    _searchController?.dispose();
     super.dispose();
   }
 
@@ -172,8 +173,11 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
                           employeeJson: _snapshot.data[index],
                           employeeToRecharge: (json) {
                             walletController.clear();
+                            commentsController.clear();
+                            FocusScope.of(context).requestFocus(FocusNode());
                             showReachargeWiget(
                                 walletController: walletController,
+                                commentsController: commentsController,
                                 key: _keyAlertDialog,
                                 mContext: context,
                                 keyboardConfig: _buildConfig(context),
@@ -223,15 +227,17 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
 
   void addEmployeeWalletAmount(EmployeeJson json) {
     showLoaderDialog(context, _keyLoaderDialog);
+
     addNewUserWallet(Model.Resource(
-        url: 'http://user.brozapp.com/apiencrypt/addUserWallet',
+        url: 'http://brozusr.tk/api/editUserWallet',
         request: newAddUserWalletRequestToJson(AddNewUserWalletRequest(
-          amount: walletController.text.trim(),
+          amount: '${double.tryParse(walletController.text.trim()) ?? 0}',
           credit: credit,
+          managerNumber: "8220520948", //NTC
           description: commentsController.text.trim(),
           transactionId: "adminAppRecharge",
           userId: json.userId.toString(),
-          walletType: 4,
+          walletType: 5,
         )))).then((value) {
       closeLoaderDialog(_keyLoaderDialog);
       switch (value.status) {
@@ -240,6 +246,8 @@ class _EmployeeWalletWidgetState extends State<EmployeeWalletWidget> {
               showToast("Wallet amount of ${json.name} updated successfully"));
           setState(() {
             streamModel.refresh();
+            scrollController.animateTo(0,
+                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           });
           break;
         default:

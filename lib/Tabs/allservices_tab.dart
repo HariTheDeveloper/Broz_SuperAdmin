@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:broz_admin/Login/password/password_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:broz_admin/Tabs/Barber/barber.dart';
@@ -299,6 +300,7 @@ class _AllServicesPageState extends State<AllServicesPage>
   _clearDefaultsAndProceed() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatus', false);
+    setUserLoginInfo("");
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
   }

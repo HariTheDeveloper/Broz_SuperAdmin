@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:broz_admin/Data/reset_password_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -315,6 +317,7 @@ class _PasswordPageState extends State<PasswordPage> {
       closeLoaderDialog(_keyAlertDialog);
       if (value.status == 1) {
         print("Value: ${value.details.outletId}");
+        setUserLoginInfo(json.encode(value.details));
         moveToAllServices(value.details.userId, value.details.userType,
             value.details.outletId);
       } else {
@@ -361,4 +364,33 @@ class _PasswordPageState extends State<PasswordPage> {
         PageTransition(
             child: AllServicesPage(), type: PageTransitionType.leftToRight));
   }
+}
+
+const kUserLoginInfo = 'user_login_info';
+// get string
+getString(String key, {String defValue = ''}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // Return string
+  String value = prefs.getString(key) ?? defValue;
+  return value;
+}
+
+//put userLoginInfo
+void setUserLoginInfo(String value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(kUserLoginInfo, value);
+}
+
+//get UserLoginInfo
+Future<PasswordDetails> getUserLoginInfo() async {
+  PasswordDetails loginInfoData;
+  final loginInfo = await getString(kUserLoginInfo) ?? "";
+  if (loginInfo != "") {
+    var data = json.decode(loginInfo);
+    loginInfoData = PasswordDetails.fromJson(data);
+  } else {
+    loginInfoData = PasswordDetails();
+  }
+
+  return loginInfoData;
 }

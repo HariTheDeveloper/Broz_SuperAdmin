@@ -104,6 +104,17 @@ class PasswordDetails {
     } else
       return null;
   }
+
+  Map<String, dynamic> toJson() => {
+        'userId': userId,
+        'countryCode': countryCode,
+        'phoneNumber': phoneNumber,
+        'token': token,
+        'userEmail': userEmail,
+        'userName': userName,
+        'firstName': firstName,
+        'lastName': lastName
+      };
 }
 
 class UserAddress {

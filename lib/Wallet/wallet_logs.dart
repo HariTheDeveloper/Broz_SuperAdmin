@@ -37,7 +37,7 @@ class _WalletLogsScreenState extends State<WalletLogsScreen> {
     _shouldAddList = true;
     _userWalletResponse = newUserWallet(
       Resource(
-        url: 'http://user.brozapp.com/apiencrypt/newUserWallet',
+        url: 'http://brozusr.tk/apiencrypt/newUserWallet',
         request: newUserWalletRequestToJson(
           NewUserWalletRequest(
               pageNumber: '$_pageNumber',
@@ -51,7 +51,9 @@ class _WalletLogsScreenState extends State<WalletLogsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeAreaContainer(child: _bodyWidgetWithAppbar(),);
+    return SafeAreaContainer(
+      child: _bodyWidgetWithAppbar(),
+    );
   }
 
   _bodyWidgetWithAppbar() {
