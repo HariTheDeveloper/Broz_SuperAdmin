@@ -17,7 +17,8 @@ class OrderDetailWidget extends StatefulWidget {
   _OrderDetailWidgetState createState() => _OrderDetailWidgetState();
 }
 
-class _OrderDetailWidgetState extends State<OrderDetailWidget> {
+class _OrderDetailWidgetState extends State<OrderDetailWidget>
+    with AppFormatter {
   var showPriceBreakDown = false;
   var apiLoaded = false;
   var apiFailed = false;
@@ -581,19 +582,46 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
     var brozGold = 0.0;
     var brozSilver = 0.0;
     var couponAmount = 0.0;
+    var transActionAmount = 0.0;
+    var toPay = 0.0;
     switch (widget.orderDetailArguments.orderedService) {
       case OrderedService.grocery:
       case OrderedService.restaurant:
-        subtotal =
-            double.tryParse("${orderDetailsResponse.deliveryDetails.subTotal}");
+        subtotal = double.tryParse(
+                "${orderDetailsResponse.deliveryDetails.subTotal}") ??
+            0;
         deliveryCharges = double.tryParse(
-            "${orderDetailsResponse.deliveryDetails.deliveryCharge}");
+                "${orderDetailsResponse.deliveryDetails.deliveryCharge}") ??
+            0;
         brozGold = double.tryParse(
-            "${orderDetailsResponse.deliveryDetails.walletAmountUsed}");
+                "${orderDetailsResponse.deliveryDetails.brozGold ?? orderDetailsResponse.deliveryDetails.walletAmountUsed}") ??
+            0;
+        brozSilver = double.tryParse(
+                "${orderDetailsResponse.deliveryDetails.brozSilver}") ??
+            0;
         couponAmount = double.tryParse(
-            "${orderDetailsResponse.deliveryDetails.couponAmount}");
+                "${orderDetailsResponse.deliveryDetails.couponAmount}") ??
+            0;
+        transActionAmount = double.tryParse(
+                "${orderDetailsResponse.deliveryDetails.transactionAmount}") ??
+            0;
+        toPay =
+            double.tryParse("${orderDetailsResponse.deliveryDetails.toPay}") ??
+                0;
         break;
       default:
+        brozGold = double.tryParse(
+                "${appointmentDetailResponse.responseData.brozGold}") ??
+            0;
+        brozSilver = double.tryParse(
+                "${appointmentDetailResponse.responseData.brozSilver}") ??
+            0;
+        transActionAmount = double.tryParse(
+                "${appointmentDetailResponse.responseData.transactionAmount}") ??
+            0;
+        toPay = double.tryParse(
+                "${appointmentDetailResponse.responseData.toPay}") ??
+            0;
     }
     return Column(
       children: [
@@ -673,7 +701,7 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
               )
             : SizedBox.shrink(),
         SizedBox(
-          height: brozSilver > 0 ? 8 : 0,
+          height: brozGold > 0 ? 8 : 0,
         ),
         brozSilver > 0
             ? Row(
@@ -723,7 +751,52 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
               )
             : SizedBox.shrink(),
         SizedBox(
+          height: couponAmount > 0 ? 10 : 0,
+        ),
+        transActionAmount > 0
+            ? Row(
+                children: [
+                  Text(
+                    "Paid online",
+                    style: customTextStyle(MyTextStyle.largenormal),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "- ${textWithCurrency(transActionAmount)}",
+                        style: customTextStyle(MyTextStyle.largenormal),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : SizedBox.shrink(),
+        SizedBox(
           height: 10,
+        ),
+        Row(
+          children: [
+            Text(
+              "To Pay",
+              style: customTextStyle(MyTextStyle.largebold),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "${textWithCurrency(toPay)}",
+                  style: customTextStyle(MyTextStyle.largebold),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -799,6 +872,20 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget> {
   String textWithCurrency(double price) =>
       'AED ${price.toStringAsFixed(2).endsWith("0") ? removeDecimals(price.toStringAsFixed(2)) : price.toStringAsFixed(2)}';
 
+  @override
+  StatefulElement createElement() {
+    // TODO: implement createElement
+    throw UnimplementedError();
+  }
+
+  @override
+  _OrderDetailWidgetState createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
+}
+
+mixin AppFormatter {
   String removeDecimals(String price) {
     List<String> c = price.split("");
     c.removeLast();

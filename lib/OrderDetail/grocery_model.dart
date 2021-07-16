@@ -241,6 +241,10 @@ class DeliveryDetails {
   String landMark;
   String doorNo;
   String oldSubtotal;
+  String transactionAmount;
+  String toPay;
+  String brozSilver;
+  String brozGold;
 
   DeliveryDetails(
       {this.driverId,
@@ -256,6 +260,8 @@ class DeliveryDetails {
       this.scheduleDate,
       this.serviceTax,
       this.startTime,
+      this.transactionAmount,
+      this.toPay,
       this.endTime,
       this.createdDate,
       this.deliveryDate,
@@ -276,6 +282,8 @@ class DeliveryDetails {
       this.swipeMachineRequired,
       this.walletAmountUsed,
       this.landMark,
+      this.brozSilver,
+      this.brozGold,
       this.doorNo,
       this.oldSubtotal});
 
@@ -293,6 +301,8 @@ class DeliveryDetails {
     serviceTax = json['serviceTax'];
     startTime = json['startTime'];
     endTime = json['endTime'];
+    transactionAmount = json['transactionAmount'];
+    toPay = json['toPay'];
     createdDate = json['createdDate'];
     deliveryDate = json['deliveryDate'];
     orderType = json['orderType'];
@@ -314,6 +324,8 @@ class DeliveryDetails {
     landMark = json['landMark'].toString();
     doorNo = json['doorNo'].toString();
     oldSubtotal = json['oldSubtotal'];
+    brozGold = json['brozGold'];
+    brozSilver = json['brozSilver'];
     scheduleDate = json['scheduleDate'] ?? "";
   }
 }

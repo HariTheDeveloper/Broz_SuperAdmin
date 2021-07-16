@@ -68,7 +68,8 @@ class ResponseData {
   Client client;
   Outlet outlet;
   String statusName;
-  
+  String transactionAmount;
+  String toPay;
 
   ResponseData(
       {this.userAddress,
@@ -82,6 +83,8 @@ class ResponseData {
       this.statusName,
       this.totalCost,
       this.brozSilver,
+      this.transactionAmount,
+      this.toPay,
       this.brozGold,
       this.wallet,
       this.paymentMode,
@@ -105,6 +108,8 @@ class ResponseData {
         services.add(new Services.fromJson(v));
       });
     }
+    transactionAmount = json['transactionAmount'];
+    toPay = json['toPay'];
     totalCost = json['totalCost'];
     brozSilver = json['brozSilver'];
     brozGold = json['brozGold'];
@@ -130,6 +135,8 @@ class ResponseData {
     if (this.services != null) {
       data['services'] = this.services.map((v) => v.toJson()).toList();
     }
+    data['transactionAmount'] = this.transactionAmount;
+    data['toPay'] = this.toPay;
     data['totalCost'] = this.totalCost;
     data['brozSilver'] = this.brozSilver;
     data['brozGold'] = this.brozGold;
