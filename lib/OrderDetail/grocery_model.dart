@@ -245,6 +245,7 @@ class DeliveryDetails {
   String toPay;
   String brozSilver;
   String brozGold;
+  String replacementDescription;
 
   DeliveryDetails(
       {this.driverId,
@@ -270,6 +271,7 @@ class DeliveryDetails {
       this.couponAmount,
       this.email,
       this.subTotal,
+      this.replacementDescription,
       this.taxAmount,
       this.userLatitude,
       this.userLongitude,
@@ -301,6 +303,7 @@ class DeliveryDetails {
     serviceTax = json['serviceTax'];
     startTime = json['startTime'];
     endTime = json['endTime'];
+    replacementDescription = json['replacementDescription'];
     transactionAmount = json['transactionAmount'];
     toPay = json['toPay'];
     createdDate = json['createdDate'];

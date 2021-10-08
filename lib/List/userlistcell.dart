@@ -95,17 +95,10 @@ class UserListCell extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ordersJson.deviceStatus == 1
-                        ? "Open"
-                        : ordersJson.deviceStatus == 2
-                            ? "Closed"
-                            : "Minimised",
+                    getStatusLabelAndColor(ordersJson.deviceStatus).status,
                     style: TextStyle(
-                      color: ordersJson.deviceStatus == 2
-                          ? Colors.red
-                          : ordersJson.deviceStatus == 3
-                              ? Colors.orange
-                              : Colors.black,
+                      color: getStatusLabelAndColor(ordersJson.deviceStatus)
+                          .statusColor,
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
                     ),
@@ -147,4 +140,24 @@ class UserListCell extends StatelessWidget {
       ),
     );
   }
+}
+
+StatusAndLabelColor getStatusLabelAndColor(int status) {
+  switch (status) {
+    case 1:
+    case 4:
+      return StatusAndLabelColor(status: "Open", statusColor: Colors.green);
+    case 2:
+      return StatusAndLabelColor(status: "Closed", statusColor: Colors.red);
+    default:
+      return StatusAndLabelColor(
+          status: "Minimized", statusColor: Colors.orange);
+  }
+}
+
+class StatusAndLabelColor {
+  final String status;
+  final Color statusColor;
+
+  StatusAndLabelColor({this.status, this.statusColor});
 }

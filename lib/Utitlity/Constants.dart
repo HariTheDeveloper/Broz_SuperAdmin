@@ -34,12 +34,14 @@ class Constants {
   static int restaurant = 5;
   static int userLogs = 6;
   static int offerLogs = 7;
+  static int fitness = 9;
 }
 
 const String DELIEVERD = "delivered";
 const String CANCELLED = "cancelled";
 const String DISPATCHED = "dispatched";
 const String COMPLETED = "completed";
+const String INPROCESS = "in-process";
 
 bool isIphoneXorNot(BuildContext context) {
   return Platform.isIOS

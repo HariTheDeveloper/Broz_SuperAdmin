@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:broz_admin/OrderDetail/fitness_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -142,4 +143,10 @@ Future<UserAppointmentDetailsResponse> appointmentDetails<T>(
 OrderDetailsResponse orderDetailsResponseFromJson(String str) {
   final jsonData = json.decode(str);
   return OrderDetailsResponse.fromJson(jsonData);
+}
+
+Future<AppointmentDetailResponse> appointmentDetailAPI<T>(
+    Resource<T> resource) async {
+  final response = await httpRequest(resource: resource);
+  return appointmentDetailResponseFromJson(response);
 }

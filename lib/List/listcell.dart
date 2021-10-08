@@ -245,6 +245,7 @@ class ListCell extends StatelessWidget {
       case CANCELLED:
       case DISPATCHED:
       case COMPLETED:
+      case INPROCESS:
         return true;
       default:
         return false;
@@ -259,6 +260,7 @@ class ListCell extends StatelessWidget {
       case CANCELLED:
         return Colors.red;
       case DISPATCHED:
+      case INPROCESS:
         return Colors.blueAccent;
       default:
         return Colors.black;

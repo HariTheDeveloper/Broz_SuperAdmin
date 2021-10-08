@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:broz_admin/Login/password/password_page.dart';
+import 'package:broz_admin/Tabs/Training/training.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:broz_admin/Tabs/Barber/barber.dart';
@@ -30,15 +31,16 @@ class _AllServicesPageState extends State<AllServicesPage>
     {"title": "Supermarket", "id": 1},
     {"title": "Restaurant", "id": 5},
     {"title": "Hair&Beauty", "id": 2},
+    {"title": "Fitness", "id": 9},
     {"title": "Laundry", "id": 4},
     {"title": "Home Cleaning", "id": 3},
     {"title": "User Logs", "id": 6},
     {"title": "Offer Logs", "id": 7},
-    {"title": "Customer Logs", "id": 8}
+    {"title": "Customer Logs", "id": 8},
   ];
 
   int selectedIndex = 0;
-
+  String editPermission = "0";
   @override
   void initState() {
     super.initState();
@@ -47,6 +49,12 @@ class _AllServicesPageState extends State<AllServicesPage>
         : tabsArray[selectedIndex]['id'] == Constants.userType
             ? true
             : false;
+
+    getString(kUserEditPermission).then((value) {
+      setState(() {
+        editPermission = value;
+      });
+    });
   }
 
   @override
@@ -83,13 +91,23 @@ class _AllServicesPageState extends State<AllServicesPage>
         )
       },
       {
+        "title": "Fitness",
+        "id": Constants.fitness,
+        "icon": Image.asset(
+          "assets/training.png",
+          width: 24,
+          height: 24,
+          color: selectedIndex == 3 ? Colors.green : Colors.grey,
+        )
+      },
+      {
         "title": "Laundry",
         "id": Constants.laundry,
         "icon": Image.asset(
           "assets/laundry.png",
           width: 24,
           height: 24,
-          color: selectedIndex == 3 ? Colors.green : Colors.grey,
+          color: selectedIndex == 4 ? Colors.green : Colors.grey,
         )
       },
       {
@@ -99,7 +117,7 @@ class _AllServicesPageState extends State<AllServicesPage>
           "assets/maid.png",
           width: 24,
           height: 24,
-          color: selectedIndex == 4 ? Colors.green : Colors.grey,
+          color: selectedIndex == 5 ? Colors.green : Colors.grey,
         )
       },
       {
@@ -109,7 +127,7 @@ class _AllServicesPageState extends State<AllServicesPage>
           "assets/logs.png",
           width: 24,
           height: 24,
-          color: selectedIndex == 5 ? Colors.green : Colors.grey,
+          color: selectedIndex == 6 ? Colors.green : Colors.grey,
         )
       },
       {
@@ -119,7 +137,7 @@ class _AllServicesPageState extends State<AllServicesPage>
           "assets/offer.png",
           width: 24,
           height: 24,
-          color: selectedIndex == 6 ? Colors.green : Colors.grey,
+          color: selectedIndex == 7 ? Colors.green : Colors.grey,
         )
       },
       {
@@ -150,7 +168,7 @@ class _AllServicesPageState extends State<AllServicesPage>
               "${title["title"]}",
               style: TextStyle(color: Colors.white),
             ),
-            leading: Constants.userType != 0
+            leading: editPermission == "0"
                 ? IconButton(
                     onPressed: () {
                       _showAlert();
@@ -234,6 +252,7 @@ class _AllServicesPageState extends State<AllServicesPage>
               GroceryScreen(),
               RestaurantScreen(),
               BarberScreen(),
+              TrainingScreen(),
               LaundryScreen(),
               MaidScreen(),
               UserLogsScreen(),
@@ -301,6 +320,7 @@ class _AllServicesPageState extends State<AllServicesPage>
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatus', false);
     setString(kUserLoginInfo, "");
+    setString(kUserEditPermission, "");
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
   }

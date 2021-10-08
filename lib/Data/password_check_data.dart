@@ -64,6 +64,7 @@ class PasswordDetails {
   final int userType;
   List<UserAddress> userAddress;
   List<String> outletId;
+  final String editPermission;
 
   PasswordDetails(
       {this.userId,
@@ -77,6 +78,7 @@ class PasswordDetails {
       this.lastName,
       this.userOtp,
       this.userType,
+      this.editPermission,
       this.outletId,
       this.userAddress});
 
@@ -97,6 +99,7 @@ class PasswordDetails {
           lastName: json['lastName'],
           userOtp: json['userOtp'],
           userType: json['userType'],
+          editPermission: json['editPermission'].toString(),
           outletId: outletId != null
               ? outletId.map((el) => el.toString()).toList()
               : null,
@@ -106,7 +109,6 @@ class PasswordDetails {
     } else
       return null;
   }
-
 }
 
 class UserAddress {

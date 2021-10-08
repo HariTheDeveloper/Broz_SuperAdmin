@@ -11,13 +11,24 @@ var _defaultApiHeaders = {
   'api-token': 'dGhpc2lzYWNvbW1vbnRva2VuXzE='
 };
 
-Future<List<CustomerLogs>> _getCustomersList(int withPage) async {
-  final data = await http.post(Uri.parse("http://user.brozapp.com/api/userCallLogs"),
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        'userType': Constants.userType,
-      }));
-
+Future<List<CustomerLogs>> _getCustomersList(
+    int withPage, String searchText) async {
+  final data =
+      await http.post(Uri.parse("http://user.brozapp.com/api/userCallLogs"),
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            'userType': Constants.userType,
+            "pageNumber": withPage,
+            "pageSize": 10,
+            "searchText": searchText
+          }));
+  var params = jsonEncode(<String, dynamic>{
+    'userType': Constants.userType,
+    "pageNumber": withPage,
+    "pageSize": 10,
+    "searchText": searchText
+  });
+  print('request params $params ** http://user.brozapp.com/api/userCallLogs');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 1) {
@@ -39,6 +50,7 @@ class CustomersStreamModel {
   int pageNumber;
   bool _isLoading;
   bool reachedBottom;
+  String searchText;
   List<CustomerLogs> _data;
   StreamController<List<CustomerLogs>> _controller;
 
@@ -47,6 +59,7 @@ class CustomersStreamModel {
     _controller = StreamController<List<CustomerLogs>>.broadcast();
     _isLoading = false;
     pageNumber = 1;
+    searchText = "";
     stream = _controller.stream.map((List<CustomerLogs> postsData) {
       return postsData;
     });
@@ -72,12 +85,12 @@ class CustomersStreamModel {
       return Future.value();
     }
     _isLoading = true;
-    return _getCustomersList(pageNumber).then((postsData) {
+    return _getCustomersList(pageNumber, searchText).then((postsData) {
       _isLoading = false;
       _data.addAll(postsData);
       pageNumber += 1;
       reachedBottom = false;
-      hasMore = reachedBottom;
+      hasMore = (postsData.length >= 10) || reachedBottom;
       _controller.add(_data);
     });
   }

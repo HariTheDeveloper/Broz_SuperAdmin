@@ -13,15 +13,16 @@ var _defaultApiHeaders = {
 };
 
 Future<List<UsersLogs>> _getUsersLogList(int withPage) async {
-  final data = await http.post((Uri.parse("http://user.brozapp.com/api/userLogList")),
-      headers: _defaultApiHeaders,
-      body: jsonEncode(<String, dynamic>{
-        "pageNumber": withPage,
-        "pageSize": 10,
-        'userId': Constants.userID,
-        'userType': Constants.userType,
-        'outletId': Constants.outletID
-      }));
+  final data =
+      await http.post((Uri.parse("http://user.brozapp.com/api/userLogList")),
+          headers: _defaultApiHeaders,
+          body: jsonEncode(<String, dynamic>{
+            "pageNumber": withPage,
+            "pageSize": 10,
+            'userId': Constants.userID,
+            'userType': Constants.userType,
+            'outletId': Constants.outletID
+          }));
   var params = jsonEncode(<String, dynamic>{
     "pageNumber": withPage,
     "pageSize": 10,
@@ -29,7 +30,7 @@ Future<List<UsersLogs>> _getUsersLogList(int withPage) async {
     'userType': Constants.userType,
     'outletId': Constants.outletID
   });
-  print('request params ${params} ** ');
+  print('request params ${params} ** http://user.brozapp.com/api/userLogList');
   var json = jsonDecode(data.body);
   print("API Response:$json");
   if (json["status"] == 1) {
@@ -37,10 +38,10 @@ Future<List<UsersLogs>> _getUsersLogList(int withPage) async {
     if (userLogList.length > 0) {
       return userLogList.map((e) => UsersLogs.fromJson(e)).toList();
     } else {
-      return List<UsersLogs>();
+      return List<UsersLogs>.empty(growable: true);
     }
   }
-  return List<UsersLogs>();
+  return List<UsersLogs>.empty(growable: true);
 }
 
 class UserLogsStreamModel {
@@ -87,7 +88,7 @@ class UserLogsStreamModel {
       _data.addAll(postsData);
       pageNumber += 1;
       reachedBottom = false;
-      hasMore = false;
+      hasMore = (postsData.length > 0) || reachedBottom;
       _controller.add(_data);
     });
   }

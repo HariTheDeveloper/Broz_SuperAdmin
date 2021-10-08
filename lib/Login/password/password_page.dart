@@ -318,6 +318,7 @@ class _PasswordPageState extends State<PasswordPage> {
       if (value.status == 1) {
         print("Value: ${value.details.outletId}");
         setString(kUserLoginInfo, widget.logindetail.phoneNumber);
+        setString(kUserEditPermission, value.details.editPermission);
         moveToAllServices(value.details.userId, value.details.userType,
             value.details.outletId);
       } else {
@@ -367,17 +368,17 @@ class _PasswordPageState extends State<PasswordPage> {
 }
 
 const kUserLoginInfo = 'user_login_info';
+const kUserEditPermission = 'user_edit_permission';
 // put string
 void setString(String key, String value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString(key, value);
 }
+
 // get string
-getString(String key, {String defValue = ''}) async {
+Future<String> getString(String key, {String defValue = ''}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // Return string
   String value = prefs.getString(key) ?? defValue;
   return value;
 }
-
-

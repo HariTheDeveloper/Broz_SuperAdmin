@@ -1,3 +1,4 @@
+import 'package:broz_admin/OrderDetail/fitness_model.dart';
 import 'package:flutter/material.dart';
 import 'package:broz_admin/OrderDetail/barber_model.dart';
 import 'package:broz_admin/OrderDetail/grocery_model.dart';
@@ -6,7 +7,7 @@ import 'package:broz_admin/Utitlity/Constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum MyTextStyle { largebold, mediumbold, largenormal, normal }
-enum OrderedService { grocery, restaurant, maid, laundry, barber }
+enum OrderedService { grocery, restaurant, maid, laundry, barber, fitness }
 
 class OrderDetailWidget extends StatefulWidget {
   final OrderDetailArguments orderDetailArguments;
@@ -24,10 +25,9 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
   var apiFailed = false;
   OrderDetailsResponse orderDetailsResponse;
   UserAppointmentDetailsResponse appointmentDetailResponse;
-
+  AppointmentDetailResponse trainerAppointmentDetailResponse;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _callServiceBasedAPIs();
@@ -43,6 +43,9 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
       case OrderedService.grocery:
       case OrderedService.restaurant:
         _callOrderDetail(widget.orderDetailArguments.orderedService);
+        break;
+      case OrderedService.fitness:
+        _callFitnessAppointmentDetail();
         break;
       default:
         _callAppointmentDetail(widget.orderDetailArguments.orderedService);
@@ -66,6 +69,25 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
       setState(() {
         apiLoaded = true;
         orderDetailsResponse = value;
+      });
+    }).catchError((onError) {
+      setState(() {
+        apiLoaded = true;
+        apiFailed = true;
+      });
+    });
+  }
+
+  _callFitnessAppointmentDetail() {
+    appointmentDetailAPI(Resource(
+            url: "http://brozfit.tk/apiencrypt/appointmentDetail",
+            request: appointmentDetailRequestToJson(AppointmentDetailRequest(
+                appointmentId: widget.orderDetailArguments.orderID ?? "",
+                userId: widget.orderDetailArguments.userId ?? ""))))
+        .then((value) {
+      setState(() {
+        apiLoaded = true;
+        trainerAppointmentDetailResponse = value;
       });
     }).catchError((onError) {
       setState(() {
@@ -177,6 +199,12 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                 .orderComments ??
             "";
         break;
+      case OrderedService.fitness:
+        status = trainerAppointmentDetailResponse.responseData.statusName ?? "";
+        id = trainerAppointmentDetailResponse.responseData.statusId ?? 0;
+        orderCancellationReason =
+            trainerAppointmentDetailResponse.responseData.description ?? "";
+        break;
       default:
         status = appointmentDetailResponse.responseData.statusName ?? "";
         id = appointmentDetailResponse.responseData.appointmentStatus ?? 0;
@@ -233,6 +261,15 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
         address = orderDetailsResponse.deliveryDetails.userContactAddress ?? "";
         date = orderDetailsResponse.deliveryDetails.deliveryDate ?? "";
         isOrder = true;
+        break;
+      case OrderedService.fitness:
+        name = trainerAppointmentDetailResponse.responseData.userName;
+        email = trainerAppointmentDetailResponse.responseData.userEmail;
+        phone = trainerAppointmentDetailResponse.responseData.userNumber;
+        address =
+            trainerAppointmentDetailResponse.responseData.userAddress ?? "";
+        date = trainerAppointmentDetailResponse.responseData.deliveryDate ?? "";
+        isOrder = false;
         break;
       default:
         name = appointmentDetailResponse.responseData.client.name ?? "";
@@ -345,11 +382,44 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                   ],
                 ),
               ),
+              isOrder == true
+                  ? _replacemetInfoWidget(orderDetailsResponse.deliveryDetails)
+                  : SizedBox.shrink(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _replacemetInfoWidget(DeliveryDetails deliveryDetails) {
+    bool showWidget = false;
+    double subTotal = double.tryParse(deliveryDetails.oldSubtotal) ?? 0;
+    if (subTotal != 0) {
+      showWidget = subTotal != deliveryDetails.subTotal &&
+          deliveryDetails.replacementDescription != "";
+    }
+    return showWidget
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info,
+                  size: 20,
+                  color: Colors.green,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: Text(deliveryDetails.replacementDescription,
+                      style: customTextStyle(MyTextStyle.normal)),
+                ),
+              ],
+            ),
+          )
+        : const SizedBox.shrink();
   }
 
   _paymentOptionWidget() {
@@ -358,7 +428,10 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
       case OrderedService.grocery:
       case OrderedService.restaurant:
         payment = orderDetailsResponse.deliveryDetails.name ?? "";
-
+        break;
+      case OrderedService.fitness:
+        payment =
+            trainerAppointmentDetailResponse.responseData.paymentMode ?? "";
         break;
       default:
         payment = appointmentDetailResponse.responseData.paymentMode ?? "";
@@ -408,14 +481,19 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
   _orderListWidget() {
     List<OrderProductList> orderProductList = [];
     List<Services> servicesList = [];
+    List<ServicesList> trainerServicesList = [];
     var isOrder = widget.orderDetailArguments.orderedService ==
             OrderedService.grocery ||
         widget.orderDetailArguments.orderedService == OrderedService.restaurant;
+
     switch (widget.orderDetailArguments.orderedService) {
       case OrderedService.grocery:
       case OrderedService.restaurant:
         orderProductList = orderDetailsResponse.orderProductList;
-
+        break;
+      case OrderedService.fitness:
+        trainerServicesList =
+            trainerAppointmentDetailResponse.responseData.servicesList;
         break;
       default:
         servicesList = appointmentDetailResponse.responseData.services;
@@ -442,6 +520,41 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
+                      var itemCount = "";
+                      var spacing = 8.0;
+                      var serviceName = "";
+                      var servicePrice = "0";
+                      switch (widget.orderDetailArguments.orderedService) {
+                        case OrderedService.grocery:
+                        case OrderedService.restaurant:
+                          itemCount = "${orderProductList[index].orderUnit}x";
+                          serviceName =
+                              "${orderProductList[index].productName}";
+                          servicePrice =
+                              "${orderProductList[index].discountPrice}";
+                          break;
+                        case OrderedService.fitness:
+                          itemCount = "";
+                          spacing = 0;
+                          serviceName = trainerServicesList[index].name;
+                          servicePrice =
+                              trainerServicesList[index].discountPrice;
+                          break;
+                        default:
+                          itemCount = servicesList[index].itemCount.isNotEmpty
+                              ? "${servicesList[index].itemCount}x"
+                              : "1x";
+                          spacing = servicesList[index].itemCount.isNotEmpty
+                              ? "${servicesList[index].itemCount}x" == ""
+                                  ? 0
+                                  : 8
+                              : 0;
+                          serviceName = servicesList[index].serviceName != null
+                              ? "${servicesList[index].serviceName}"
+                              : "${servicesList[index].categoryName}";
+                          servicePrice =
+                              "${servicesList[index].cost.replaceAll("AED", "")}";
+                      }
                       return Container(
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: Column(
@@ -450,33 +563,15 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                             Row(
                               children: [
                                 Text(
-                                  isOrder
-                                      ? "${orderProductList[index].orderUnit}x"
-                                      : servicesList[index].itemCount.isNotEmpty
-                                          ? "${servicesList[index].itemCount}x"
-                                          : "",
+                                  itemCount,
                                   style: customTextStyle(MyTextStyle.normal),
                                 ),
                                 SizedBox(
-                                  width: isOrder
-                                      ? 8
-                                      : servicesList[index].itemCount.isNotEmpty
-                                          ? "${servicesList[index].itemCount}x" ==
-                                                  ""
-                                              ? 0
-                                              : 8
-                                          : "" == ""
-                                              ? 0
-                                              : 8,
+                                  width: spacing,
                                 ),
                                 Expanded(
                                   child: Text(
-                                    isOrder
-                                        ? "${orderProductList[index].productName}"
-                                        : servicesList[index].serviceName !=
-                                                null
-                                            ? "${servicesList[index].serviceName}"
-                                            : "${servicesList[index].categoryName}",
+                                    serviceName,
                                     style: customTextStyle(MyTextStyle.normal),
                                   ),
                                 ),
@@ -484,9 +579,8 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                                   width: 8,
                                 ),
                                 Text(
-                                  textWithCurrency(double.tryParse(isOrder
-                                      ? "${orderProductList[index].discountPrice}"
-                                      : "${servicesList[index].cost.replaceAll("AED", "")}")),
+                                  textWithCurrency(
+                                      double.tryParse(servicePrice)),
                                   style: customTextStyle(MyTextStyle.normal),
                                 )
                               ],
@@ -495,8 +589,12 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
                         ),
                       );
                     },
-                    itemCount:
-                        isOrder ? orderProductList.length : servicesList.length,
+                    itemCount: isOrder
+                        ? orderProductList.length
+                        : widget.orderDetailArguments.orderedService ==
+                                OrderedService.fitness
+                            ? trainerServicesList.length
+                            : servicesList.length,
                   ),
                   SizedBox(
                     height: 10,
@@ -515,7 +613,10 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
       case OrderedService.restaurant:
         total =
             double.tryParse(orderDetailsResponse.deliveryDetails.totalAmount);
-
+        break;
+      case OrderedService.fitness:
+        total = double.tryParse(
+            trainerAppointmentDetailResponse.responseData.totalPrice);
         break;
       default:
         total =
@@ -608,6 +709,20 @@ class _OrderDetailWidgetState extends State<OrderDetailWidget>
         toPay =
             double.tryParse("${orderDetailsResponse.deliveryDetails.toPay}") ??
                 0;
+        break;
+      case OrderedService.fitness:
+        brozGold = double.tryParse(
+                "${trainerAppointmentDetailResponse.responseData.brozGold}") ??
+            0;
+        brozSilver = double.tryParse(
+                "${trainerAppointmentDetailResponse.responseData.brozSilver}") ??
+            0;
+        transActionAmount = double.tryParse(
+                "${trainerAppointmentDetailResponse.responseData.transactionAmount}") ??
+            0;
+        toPay = double.tryParse(
+                "${trainerAppointmentDetailResponse.responseData.toPay}") ??
+            0;
         break;
       default:
         brozGold = double.tryParse(

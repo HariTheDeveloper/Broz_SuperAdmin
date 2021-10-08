@@ -12,17 +12,16 @@ var _defaultApiHeaders = {
   'api-token': 'dGhpc2lzYWNvbW1vbnRva2VuXzE='
 };
 
-Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
-  final data =
-      await http.post(Uri.parse("https://restaurant.brozapp.com/api/morderDetails"),
-          headers: _defaultApiHeaders,
-          body: jsonEncode(<String, dynamic>{
-            "pageNumber": withPage,
-            "pageSize": 10,
-            'userId': Constants.userID,
-            'userType': Constants.userType,
-            'outletId': Constants.outletID
-          }));
+Future<List<OrderJson>> _getTrainingAppointmentList(int withPage) async {
+  final data = await http.post(Uri.parse("http://brozfit.tk/api/morderDetails"),
+      headers: _defaultApiHeaders,
+      body: jsonEncode(<String, dynamic>{
+        "pageNumber": withPage,
+        "pageSize": 10,
+        'userId': Constants.userID,
+        'userType': Constants.userType,
+        'outletId': Constants.outletID
+      }));
 
   var params = jsonEncode(<String, dynamic>{
     "pageNumber": withPage,
@@ -32,22 +31,22 @@ Future<List<OrderJson>> _getRestaurantsOrdersList(int withPage) async {
     'outletId': Constants.outletID
   });
 
-  print(
-      'request params $params ** https://restaurant.brozapp.com/api/morderDetails');
+  print('request params $params ** http://brozfit.tk/api/morderDetails');
   var json = jsonDecode(data.body);
   print("API Response:$json");
-  if (json["status"] == 200) {
-    final Iterable orderDataList = json['orderDataList'];
+  if (json["status"] == 1) {
+    final Iterable orderDataList = json["responseData"]['appointments'];
     if (orderDataList.length > 0) {
       return orderDataList.map((e) => OrderJson.fromJson(e)).toList();
     } else {
       return List<OrderJson>.empty(growable: true);
     }
+  } else {
+    return List<OrderJson>.empty(growable: true);
   }
-  return List<OrderJson>.empty(growable: true);
 }
 
-class RestaurantStreamModel {
+class TrainingStreamModel {
   Stream<List<OrderJson>> stream;
   bool hasMore;
   int pageNumber;
@@ -56,8 +55,8 @@ class RestaurantStreamModel {
   List<OrderJson> _data;
   StreamController<List<OrderJson>> _controller;
 
-  RestaurantStreamModel() {
-    _data = List<OrderJson>();
+  TrainingStreamModel() {
+    _data = List<OrderJson>.empty(growable: true);
     _controller = StreamController<List<OrderJson>>.broadcast();
     _isLoading = false;
     pageNumber = 1;
@@ -77,7 +76,7 @@ class RestaurantStreamModel {
   Future<void> loadMore(
       {bool clearCachedData = false, bool reachesBottom = false}) {
     if (clearCachedData) {
-      _data = List<OrderJson>();
+      _data = List<OrderJson>.empty(growable: true);
       pageNumber = 1;
       hasMore = true;
     }
@@ -86,7 +85,7 @@ class RestaurantStreamModel {
       return Future.value();
     }
     _isLoading = true;
-    return _getRestaurantsOrdersList(pageNumber).then((postsData) {
+    return _getTrainingAppointmentList(pageNumber).then((postsData) {
       _isLoading = false;
       _data.addAll(postsData);
       pageNumber += 1;
